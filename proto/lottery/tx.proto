@@ -1,0 +1,13 @@
+syntax = "proto3";
+package tokenism30924.lottery.lottery;
+
+// this line is used by starport scaffolding # proto/tx/import
+
+option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
+
+// Msg defines the Msg service.
+service Msg {
+    // this line is used by starport scaffolding # proto/tx/rpc
+}
+
+// this line is used by starport scaffolding # proto/tx/message
