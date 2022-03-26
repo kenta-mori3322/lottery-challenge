@@ -7,7 +7,16 @@ option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
 
 // Msg defines the Msg service.
 service Msg {
-    // this line is used by starport scaffolding # proto/tx/rpc
+      rpc EnterLottery(MsgEnterLottery) returns (MsgEnterLotteryResponse);
+// this line is used by starport scaffolding # proto/tx/rpc
+}
+
+message MsgEnterLottery {
+  string creator = 1;
+  string betAmount = 2;
+}
+
+message MsgEnterLotteryResponse {
 }
 
 // this line is used by starport scaffolding # proto/tx/message
