@@ -5,6 +5,8 @@ package types
 
 import (
 	fmt "fmt"
+	types "github.com/cosmos/cosmos-sdk/types"
+	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
 	io "io"
 	math "math"
@@ -23,12 +25,12 @@ var _ = math.Inf
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
 type Lottery struct {
-	Index             string `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
-	MaxNumber         string `protobuf:"bytes,2,opt,name=maxNumber,proto3" json:"maxNumber,omitempty"`
-	WinningNumber     string `protobuf:"bytes,3,opt,name=winningNumber,proto3" json:"winningNumber,omitempty"`
-	Status            string `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`
-	Price             string `protobuf:"bytes,5,opt,name=price,proto3" json:"price,omitempty"`
-	AccumulatedAmount string `protobuf:"bytes,6,opt,name=accumulatedAmount,proto3" json:"accumulatedAmount,omitempty"`
+	Index             string      `protobuf:"bytes,1,opt,name=index,proto3" json:"index,omitempty"`
+	MaxNumber         int64       `protobuf:"varint,2,opt,name=maxNumber,proto3" json:"maxNumber,omitempty"`
+	WinningNumber     int64       `protobuf:"varint,3,opt,name=winningNumber,proto3" json:"winningNumber,omitempty"`
+	Status            int64       `protobuf:"varint,4,opt,name=status,proto3" json:"status,omitempty"`
+	Price             *types.Coin `protobuf:"bytes,5,opt,name=price,proto3" json:"price,omitempty"`
+	AccumulatedAmount *types.Coin `protobuf:"bytes,6,opt,name=accumulatedAmount,proto3" json:"accumulatedAmount,omitempty"`
 }
 
 func (m *Lottery) Reset()         { *m = Lottery{} }
@@ -71,39 +73,39 @@ func (m *Lottery) GetIndex() string {
 	return ""
 }
 
-func (m *Lottery) GetMaxNumber() string {
+func (m *Lottery) GetMaxNumber() int64 {
 	if m != nil {
 		return m.MaxNumber
 	}
-	return ""
+	return 0
 }
 
-func (m *Lottery) GetWinningNumber() string {
+func (m *Lottery) GetWinningNumber() int64 {
 	if m != nil {
 		return m.WinningNumber
 	}
-	return ""
+	return 0
 }
 
-func (m *Lottery) GetStatus() string {
+func (m *Lottery) GetStatus() int64 {
 	if m != nil {
 		return m.Status
 	}
-	return ""
+	return 0
 }
 
-func (m *Lottery) GetPrice() string {
+func (m *Lottery) GetPrice() *types.Coin {
 	if m != nil {
 		return m.Price
 	}
-	return ""
+	return nil
 }
 
-func (m *Lottery) GetAccumulatedAmount() string {
+func (m *Lottery) GetAccumulatedAmount() *types.Coin {
 	if m != nil {
 		return m.AccumulatedAmount
 	}
-	return ""
+	return nil
 }
 
 func init() {
@@ -113,22 +115,26 @@ func init() {
 func init() { proto.RegisterFile("lottery/lottery.proto", fileDescriptor_e2b8635f78dae0e2) }
 
 var fileDescriptor_e2b8635f78dae0e2 = []byte{
-	// 239 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0xcd, 0xc9, 0x2f, 0x29,
-	0x49, 0x2d, 0xaa, 0xd4, 0x87, 0xd2, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0xb2, 0x25, 0xf9,
-	0xd9, 0xa9, 0x79, 0x99, 0xc5, 0xb9, 0xc6, 0x06, 0x96, 0x46, 0x26, 0x7a, 0x30, 0x49, 0x28, 0xad,
-	0xb4, 0x9f, 0x91, 0x8b, 0xdd, 0x07, 0xc2, 0x16, 0x12, 0xe1, 0x62, 0xcd, 0xcc, 0x4b, 0x49, 0xad,
-	0x90, 0x60, 0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x82, 0x70, 0x84, 0x64, 0xb8, 0x38, 0x73, 0x13, 0x2b,
-	0xfc, 0x4a, 0x73, 0x93, 0x52, 0x8b, 0x24, 0x98, 0xc0, 0x32, 0x08, 0x01, 0x21, 0x15, 0x2e, 0xde,
-	0xf2, 0xcc, 0xbc, 0xbc, 0xcc, 0xbc, 0x74, 0xa8, 0x0a, 0x66, 0xb0, 0x0a, 0x54, 0x41, 0x21, 0x31,
-	0x2e, 0xb6, 0xe2, 0x92, 0xc4, 0x92, 0xd2, 0x62, 0x09, 0x16, 0xb0, 0x34, 0x94, 0x07, 0xb2, 0xb1,
-	0xa0, 0x28, 0x33, 0x39, 0x55, 0x82, 0x15, 0x62, 0x23, 0x98, 0x23, 0xa4, 0xc3, 0x25, 0x98, 0x98,
-	0x9c, 0x5c, 0x9a, 0x5b, 0x9a, 0x93, 0x58, 0x92, 0x9a, 0xe2, 0x98, 0x9b, 0x5f, 0x9a, 0x57, 0x22,
-	0xc1, 0x06, 0x56, 0x81, 0x29, 0xe1, 0xe4, 0x75, 0xe2, 0x91, 0x1c, 0xe3, 0x85, 0x47, 0x72, 0x8c,
-	0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c, 0xc3, 0x8d, 0xc7, 0x72,
-	0x0c, 0x51, 0x06, 0xe9, 0x99, 0x25, 0x19, 0xa5, 0x49, 0x7a, 0xc9, 0xf9, 0xb9, 0xfa, 0x28, 0xa1,
-	0x00, 0x0b, 0x22, 0xfd, 0x0a, 0x38, 0xab, 0xa4, 0xb2, 0x20, 0xb5, 0x38, 0x89, 0x0d, 0x1c, 0x66,
-	0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x94, 0x84, 0xba, 0x81, 0x4c, 0x01, 0x00, 0x00,
+	// 297 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x91, 0x3d, 0x4b, 0x03, 0x31,
+	0x18, 0xc7, 0x1b, 0x6b, 0x2b, 0x8d, 0x38, 0x18, 0xaa, 0x9e, 0x45, 0x43, 0x11, 0x87, 0x4e, 0xb9,
+	0xbe, 0xb8, 0x38, 0xaa, 0x83, 0x20, 0xe2, 0xd0, 0xd1, 0x45, 0x72, 0x69, 0x38, 0x83, 0x4d, 0x9e,
+	0x72, 0x49, 0xb4, 0xfd, 0x16, 0x7e, 0x2c, 0xc7, 0x8e, 0x8e, 0x72, 0xf7, 0x19, 0xdc, 0xc5, 0xcb,
+	0x55, 0x29, 0x0e, 0x4e, 0xcf, 0xcb, 0xff, 0xf7, 0x83, 0xf0, 0x04, 0xef, 0x4d, 0xc1, 0x39, 0x99,
+	0x2d, 0xe2, 0xaa, 0xb2, 0x59, 0x06, 0x0e, 0xc8, 0xb1, 0x83, 0x27, 0x69, 0x94, 0xd5, 0xa3, 0xfe,
+	0xf9, 0xf0, 0x8c, 0xad, 0xc2, 0xaa, 0x76, 0xda, 0x29, 0xa4, 0x50, 0x92, 0xf1, 0x77, 0x17, 0xa4,
+	0xce, 0x81, 0x00, 0xab, 0xc1, 0x3e, 0x84, 0x40, 0x80, 0x32, 0x21, 0x38, 0xf9, 0x44, 0x78, 0xeb,
+	0x36, 0xa8, 0xa4, 0x8d, 0x1b, 0xca, 0x4c, 0xe4, 0x3c, 0x42, 0x5d, 0xd4, 0x6b, 0x8d, 0xc3, 0x40,
+	0x8e, 0x70, 0x4b, 0xf3, 0xf9, 0x9d, 0xd7, 0x89, 0xcc, 0xa2, 0x8d, 0x2e, 0xea, 0xd5, 0xc7, 0xbf,
+	0x0b, 0x72, 0x8a, 0x77, 0x5e, 0x94, 0x31, 0xca, 0xa4, 0x15, 0x51, 0x2f, 0x89, 0xf5, 0x25, 0xd9,
+	0xc7, 0x4d, 0xeb, 0xb8, 0xf3, 0x36, 0xda, 0x2c, 0xe3, 0x6a, 0x22, 0x31, 0x6e, 0xcc, 0x32, 0x25,
+	0x64, 0xd4, 0xe8, 0xa2, 0xde, 0xf6, 0xf0, 0x90, 0x85, 0x67, 0xb2, 0x84, 0x5b, 0xc9, 0x9e, 0x07,
+	0x89, 0x74, 0x7c, 0xc0, 0xae, 0x40, 0x99, 0x71, 0xe0, 0xc8, 0x35, 0xde, 0xe5, 0x42, 0x78, 0xed,
+	0xa7, 0xdc, 0xc9, 0xc9, 0x85, 0x06, 0x6f, 0x5c, 0xd4, 0xfc, 0x4f, 0xfe, 0xeb, 0x5c, 0xde, 0xbc,
+	0xe5, 0x14, 0x2d, 0x73, 0x8a, 0x3e, 0x72, 0x8a, 0x5e, 0x0b, 0x5a, 0x5b, 0x16, 0xb4, 0xf6, 0x5e,
+	0xd0, 0xda, 0x7d, 0x3f, 0x55, 0xee, 0xd1, 0x27, 0x4c, 0x80, 0x8e, 0xd7, 0x4e, 0xbd, 0xfa, 0x87,
+	0x78, 0xfe, 0xd3, 0xb9, 0xc5, 0x4c, 0xda, 0xa4, 0x59, 0x9e, 0x72, 0xf4, 0x15, 0x00, 0x00, 0xff,
+	0xff, 0x2e, 0xa0, 0x1c, 0x04, 0xb1, 0x01, 0x00, 0x00,
 }
 
 func (m *Lottery) Marshal() (dAtA []byte, err error) {
@@ -151,40 +157,44 @@ func (m *Lottery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	_ = i
 	var l int
 	_ = l
-	if len(m.AccumulatedAmount) > 0 {
-		i -= len(m.AccumulatedAmount)
-		copy(dAtA[i:], m.AccumulatedAmount)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.AccumulatedAmount)))
+	if m.AccumulatedAmount != nil {
+		{
+			size, err := m.AccumulatedAmount.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintLottery(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x32
 	}
-	if len(m.Price) > 0 {
-		i -= len(m.Price)
-		copy(dAtA[i:], m.Price)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.Price)))
+	if m.Price != nil {
+		{
+			size, err := m.Price.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintLottery(dAtA, i, uint64(size))
+		}
 		i--
 		dAtA[i] = 0x2a
 	}
-	if len(m.Status) > 0 {
-		i -= len(m.Status)
-		copy(dAtA[i:], m.Status)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.Status)))
+	if m.Status != 0 {
+		i = encodeVarintLottery(dAtA, i, uint64(m.Status))
 		i--
-		dAtA[i] = 0x22
+		dAtA[i] = 0x20
 	}
-	if len(m.WinningNumber) > 0 {
-		i -= len(m.WinningNumber)
-		copy(dAtA[i:], m.WinningNumber)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.WinningNumber)))
+	if m.WinningNumber != 0 {
+		i = encodeVarintLottery(dAtA, i, uint64(m.WinningNumber))
 		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x18
 	}
-	if len(m.MaxNumber) > 0 {
-		i -= len(m.MaxNumber)
-		copy(dAtA[i:], m.MaxNumber)
-		i = encodeVarintLottery(dAtA, i, uint64(len(m.MaxNumber)))
+	if m.MaxNumber != 0 {
+		i = encodeVarintLottery(dAtA, i, uint64(m.MaxNumber))
 		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x10
 	}
 	if len(m.Index) > 0 {
 		i -= len(m.Index)
@@ -217,24 +227,21 @@ func (m *Lottery) Size() (n int) {
 	if l > 0 {
 		n += 1 + l + sovLottery(uint64(l))
 	}
-	l = len(m.MaxNumber)
-	if l > 0 {
+	if m.MaxNumber != 0 {
+		n += 1 + sovLottery(uint64(m.MaxNumber))
+	}
+	if m.WinningNumber != 0 {
+		n += 1 + sovLottery(uint64(m.WinningNumber))
+	}
+	if m.Status != 0 {
+		n += 1 + sovLottery(uint64(m.Status))
+	}
+	if m.Price != nil {
+		l = m.Price.Size()
 		n += 1 + l + sovLottery(uint64(l))
 	}
-	l = len(m.WinningNumber)
-	if l > 0 {
-		n += 1 + l + sovLottery(uint64(l))
-	}
-	l = len(m.Status)
-	if l > 0 {
-		n += 1 + l + sovLottery(uint64(l))
-	}
-	l = len(m.Price)
-	if l > 0 {
-		n += 1 + l + sovLottery(uint64(l))
-	}
-	l = len(m.AccumulatedAmount)
-	if l > 0 {
+	if m.AccumulatedAmount != nil {
+		l = m.AccumulatedAmount.Size()
 		n += 1 + l + sovLottery(uint64(l))
 	}
 	return n
@@ -308,10 +315,10 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 			m.Index = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field MaxNumber", wireType)
 			}
-			var stringLen uint64
+			m.MaxNumber = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowLottery
@@ -321,29 +328,16 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.MaxNumber |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthLottery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthLottery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.MaxNumber = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 3:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field WinningNumber", wireType)
 			}
-			var stringLen uint64
+			m.WinningNumber = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowLottery
@@ -353,29 +347,16 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.WinningNumber |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthLottery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthLottery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.WinningNumber = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 4:
-			if wireType != 2 {
+			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Status", wireType)
 			}
-			var stringLen uint64
+			m.Status = 0
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowLottery
@@ -385,29 +366,16 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				m.Status |= int64(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthLottery
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthLottery
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.Status = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
 		case 5:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Price", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowLottery
@@ -417,29 +385,33 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthLottery
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthLottery
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.Price = string(dAtA[iNdEx:postIndex])
+			if m.Price == nil {
+				m.Price = &types.Coin{}
+			}
+			if err := m.Price.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		case 6:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AccumulatedAmount", wireType)
 			}
-			var stringLen uint64
+			var msglen int
 			for shift := uint(0); ; shift += 7 {
 				if shift >= 64 {
 					return ErrIntOverflowLottery
@@ -449,23 +421,27 @@ func (m *Lottery) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
+				msglen |= int(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}
 			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
+			if msglen < 0 {
 				return ErrInvalidLengthLottery
 			}
-			postIndex := iNdEx + intStringLen
+			postIndex := iNdEx + msglen
 			if postIndex < 0 {
 				return ErrInvalidLengthLottery
 			}
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.AccumulatedAmount = string(dAtA[iNdEx:postIndex])
+			if m.AccumulatedAmount == nil {
+				m.AccumulatedAmount = &types.Coin{}
+			}
+			if err := m.AccumulatedAmount.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
 			iNdEx = postIndex
 		default:
 			iNdEx = preIndex
