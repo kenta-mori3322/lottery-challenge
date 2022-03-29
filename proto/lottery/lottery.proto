@@ -1,0 +1,15 @@
+syntax = "proto3";
+package tokenism30924.lottery.lottery;
+
+option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
+
+message Lottery {
+  string index = 1; 
+  string maxNumber = 2; 
+  string winningNumber = 3; 
+  string status = 4; 
+  string price = 5; 
+  string accumulatedAmount = 6; 
+  
+}
+
