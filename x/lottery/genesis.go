@@ -1,6 +1,8 @@
 package lottery
 
 import (
+	"strconv"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/tokenism30924/lottery/x/lottery/keeper"
 	"github.com/tokenism30924/lottery/x/lottery/types"
@@ -11,8 +13,10 @@ import (
 func InitGenesis(ctx sdk.Context, k keeper.Keeper, genState types.GenesisState) {
 	// Set all the lottery
 	for _, elem := range genState.LotteryList {
-		k.SetLottery(ctx, elem)
+		n, _ := strconv.ParseUint(elem.Index, 10, 64)
+		k.SetLottery(ctx, n, elem)
 	}
+
 	// this line is used by starport scaffolding # genesis/module/init
 	k.SetParams(ctx, genState.Params)
 }
@@ -23,6 +27,7 @@ func ExportGenesis(ctx sdk.Context, k keeper.Keeper) *types.GenesisState {
 	genesis.Params = k.GetParams(ctx)
 
 	genesis.LotteryList = k.GetAllLottery(ctx)
+
 	// this line is used by starport scaffolding # genesis/module/export
 
 	return genesis

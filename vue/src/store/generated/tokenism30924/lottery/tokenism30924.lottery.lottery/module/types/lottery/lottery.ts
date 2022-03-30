@@ -1,7 +1,6 @@
 /* eslint-disable */
 import * as Long from "long";
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import { Coin } from "../cosmos_proto/coin";
 
 export const protobufPackage = "tokenism30924.lottery.lottery";
 
@@ -10,8 +9,8 @@ export interface Lottery {
   maxNumber: number;
   winningNumber: number;
   status: number;
-  price: Coin | undefined;
-  accumulatedAmount: Coin | undefined;
+  price: string;
+  accumulatedAmount: string;
 }
 
 const baseLottery: object = {
@@ -19,6 +18,8 @@ const baseLottery: object = {
   maxNumber: 0,
   winningNumber: 0,
   status: 0,
+  price: "",
+  accumulatedAmount: "",
 };
 
 export const Lottery = {
@@ -27,19 +28,19 @@ export const Lottery = {
       writer.uint32(10).string(message.index);
     }
     if (message.maxNumber !== 0) {
-      writer.uint32(16).int64(message.maxNumber);
+      writer.uint32(16).uint64(message.maxNumber);
     }
     if (message.winningNumber !== 0) {
-      writer.uint32(24).int64(message.winningNumber);
+      writer.uint32(24).uint64(message.winningNumber);
     }
     if (message.status !== 0) {
-      writer.uint32(32).int64(message.status);
+      writer.uint32(32).uint64(message.status);
     }
-    if (message.price !== undefined) {
-      Coin.encode(message.price, writer.uint32(42).fork()).ldelim();
+    if (message.price !== "") {
+      writer.uint32(42).string(message.price);
     }
-    if (message.accumulatedAmount !== undefined) {
-      Coin.encode(message.accumulatedAmount, writer.uint32(50).fork()).ldelim();
+    if (message.accumulatedAmount !== "") {
+      writer.uint32(50).string(message.accumulatedAmount);
     }
     return writer;
   },
@@ -55,19 +56,19 @@ export const Lottery = {
           message.index = reader.string();
           break;
         case 2:
-          message.maxNumber = longToNumber(reader.int64() as Long);
+          message.maxNumber = longToNumber(reader.uint64() as Long);
           break;
         case 3:
-          message.winningNumber = longToNumber(reader.int64() as Long);
+          message.winningNumber = longToNumber(reader.uint64() as Long);
           break;
         case 4:
-          message.status = longToNumber(reader.int64() as Long);
+          message.status = longToNumber(reader.uint64() as Long);
           break;
         case 5:
-          message.price = Coin.decode(reader, reader.uint32());
+          message.price = reader.string();
           break;
         case 6:
-          message.accumulatedAmount = Coin.decode(reader, reader.uint32());
+          message.accumulatedAmount = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -100,17 +101,17 @@ export const Lottery = {
       message.status = 0;
     }
     if (object.price !== undefined && object.price !== null) {
-      message.price = Coin.fromJSON(object.price);
+      message.price = String(object.price);
     } else {
-      message.price = undefined;
+      message.price = "";
     }
     if (
       object.accumulatedAmount !== undefined &&
       object.accumulatedAmount !== null
     ) {
-      message.accumulatedAmount = Coin.fromJSON(object.accumulatedAmount);
+      message.accumulatedAmount = String(object.accumulatedAmount);
     } else {
-      message.accumulatedAmount = undefined;
+      message.accumulatedAmount = "";
     }
     return message;
   },
@@ -122,12 +123,9 @@ export const Lottery = {
     message.winningNumber !== undefined &&
       (obj.winningNumber = message.winningNumber);
     message.status !== undefined && (obj.status = message.status);
-    message.price !== undefined &&
-      (obj.price = message.price ? Coin.toJSON(message.price) : undefined);
+    message.price !== undefined && (obj.price = message.price);
     message.accumulatedAmount !== undefined &&
-      (obj.accumulatedAmount = message.accumulatedAmount
-        ? Coin.toJSON(message.accumulatedAmount)
-        : undefined);
+      (obj.accumulatedAmount = message.accumulatedAmount);
     return obj;
   },
 
@@ -154,17 +152,17 @@ export const Lottery = {
       message.status = 0;
     }
     if (object.price !== undefined && object.price !== null) {
-      message.price = Coin.fromPartial(object.price);
+      message.price = object.price;
     } else {
-      message.price = undefined;
+      message.price = "";
     }
     if (
       object.accumulatedAmount !== undefined &&
       object.accumulatedAmount !== null
     ) {
-      message.accumulatedAmount = Coin.fromPartial(object.accumulatedAmount);
+      message.accumulatedAmount = object.accumulatedAmount;
     } else {
-      message.accumulatedAmount = undefined;
+      message.accumulatedAmount = "";
     }
     return message;
   },

@@ -12,30 +12,16 @@
 export interface LotteryLottery {
   index?: string;
 
-  /** @format int64 */
+  /** @format uint64 */
   maxNumber?: string;
 
-  /** @format int64 */
+  /** @format uint64 */
   winningNumber?: string;
 
-  /** @format int64 */
+  /** @format uint64 */
   status?: string;
-
-  /**
-   * Coin defines a token with a denomination and an amount.
-   *
-   * NOTE: The amount field is an Int which implements the custom method
-   * signatures required by gogoproto.
-   */
-  price?: V1Beta1Coin;
-
-  /**
-   * Coin defines a token with a denomination and an amount.
-   *
-   * NOTE: The amount field is an Int which implements the custom method
-   * signatures required by gogoproto.
-   */
-  accumulatedAmount?: V1Beta1Coin;
+  price?: string;
+  accumulatedAmount?: string;
 }
 
 export type LotteryMsgEnterLotteryResponse = object;
@@ -81,17 +67,6 @@ export interface RpcStatus {
   code?: number;
   message?: string;
   details?: ProtobufAny[];
-}
-
-/**
-* Coin defines a token with a denomination and an amount.
-
-NOTE: The amount field is an Int which implements the custom method
-signatures required by gogoproto.
-*/
-export interface V1Beta1Coin {
-  denom?: string;
-  amount?: string;
 }
 
 /**

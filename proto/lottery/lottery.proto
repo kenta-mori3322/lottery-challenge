@@ -1,16 +1,13 @@
 syntax = "proto3";
 package tokenism30924.lottery.lottery;
 
-import "gogoproto/gogo.proto";
-import "cosmos_proto/coin.proto";
-
 option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
 
 message Lottery {
   string index = 1; 
-  int64 maxNumber = 2; 
-  int64 winningNumber = 3; 
-  int64 status = 4; 
-  cosmos.base.v1beta1.Coin price = 5; 
-  cosmos.base.v1beta1.Coin accumulatedAmount = 6; 
+  uint64 maxNumber = 2; 
+  uint64 winningNumber = 3; 
+  uint64 status = 4; 
+  string price = 5; 
+  string accumulatedAmount = 6; 
 }

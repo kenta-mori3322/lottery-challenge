@@ -4,6 +4,7 @@ package tokenism30924.lottery.lottery;
 import "gogoproto/gogo.proto";
 import "lottery/params.proto";
 import "lottery/lottery.proto";
+
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/tokenism30924/lottery/x/lottery/types";

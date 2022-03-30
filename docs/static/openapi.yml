@@ -27698,43 +27698,17 @@ paths:
                       type: string
                     maxNumber:
                       type: string
-                      format: int64
+                      format: uint64
                     winningNumber:
                       type: string
-                      format: int64
+                      format: uint64
                     status:
                       type: string
-                      format: int64
+                      format: uint64
                     price:
-                      type: object
-                      properties:
-                        denom:
-                          type: string
-                        amount:
-                          type: string
-                      description: >-
-                        Coin defines a token with a denomination and an amount.
-
-
-                        NOTE: The amount field is an Int which implements the
-                        custom method
-
-                        signatures required by gogoproto.
+                      type: string
                     accumulatedAmount:
-                      type: object
-                      properties:
-                        denom:
-                          type: string
-                        amount:
-                          type: string
-                      description: >-
-                        Coin defines a token with a denomination and an amount.
-
-
-                        NOTE: The amount field is an Int which implements the
-                        custom method
-
-                        signatures required by gogoproto.
+                      type: string
               pagination:
                 type: object
                 properties:
@@ -27856,43 +27830,17 @@ paths:
                     type: string
                   maxNumber:
                     type: string
-                    format: int64
+                    format: uint64
                   winningNumber:
                     type: string
-                    format: int64
+                    format: uint64
                   status:
                     type: string
-                    format: int64
+                    format: uint64
                   price:
-                    type: object
-                    properties:
-                      denom:
-                        type: string
-                      amount:
-                        type: string
-                    description: >-
-                      Coin defines a token with a denomination and an amount.
-
-
-                      NOTE: The amount field is an Int which implements the
-                      custom method
-
-                      signatures required by gogoproto.
+                    type: string
                   accumulatedAmount:
-                    type: object
-                    properties:
-                      denom:
-                        type: string
-                      amount:
-                        type: string
-                    description: >-
-                      Coin defines a token with a denomination and an amount.
-
-
-                      NOTE: The amount field is an Int which implements the
-                      custom method
-
-                      signatures required by gogoproto.
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -47273,37 +47221,17 @@ definitions:
         type: string
       maxNumber:
         type: string
-        format: int64
+        format: uint64
       winningNumber:
         type: string
-        format: int64
+        format: uint64
       status:
         type: string
-        format: int64
+        format: uint64
       price:
-        type: object
-        properties:
-          denom:
-            type: string
-          amount:
-            type: string
-        description: |-
-          Coin defines a token with a denomination and an amount.
-
-          NOTE: The amount field is an Int which implements the custom method
-          signatures required by gogoproto.
+        type: string
       accumulatedAmount:
-        type: object
-        properties:
-          denom:
-            type: string
-          amount:
-            type: string
-        description: |-
-          Coin defines a token with a denomination and an amount.
-
-          NOTE: The amount field is an Int which implements the custom method
-          signatures required by gogoproto.
+        type: string
   tokenism30924.lottery.lottery.MsgEnterLotteryResponse:
     type: object
   tokenism30924.lottery.lottery.Params:
@@ -47321,43 +47249,17 @@ definitions:
               type: string
             maxNumber:
               type: string
-              format: int64
+              format: uint64
             winningNumber:
               type: string
-              format: int64
+              format: uint64
             status:
               type: string
-              format: int64
+              format: uint64
             price:
-              type: object
-              properties:
-                denom:
-                  type: string
-                amount:
-                  type: string
-              description: >-
-                Coin defines a token with a denomination and an amount.
-
-
-                NOTE: The amount field is an Int which implements the custom
-                method
-
-                signatures required by gogoproto.
+              type: string
             accumulatedAmount:
-              type: object
-              properties:
-                denom:
-                  type: string
-                amount:
-                  type: string
-              description: >-
-                Coin defines a token with a denomination and an amount.
-
-
-                NOTE: The amount field is an Int which implements the custom
-                method
-
-                signatures required by gogoproto.
+              type: string
       pagination:
         type: object
         properties:
@@ -47393,43 +47295,17 @@ definitions:
             type: string
           maxNumber:
             type: string
-            format: int64
+            format: uint64
           winningNumber:
             type: string
-            format: int64
+            format: uint64
           status:
             type: string
-            format: int64
+            format: uint64
           price:
-            type: object
-            properties:
-              denom:
-                type: string
-              amount:
-                type: string
-            description: >-
-              Coin defines a token with a denomination and an amount.
-
-
-              NOTE: The amount field is an Int which implements the custom
-              method
-
-              signatures required by gogoproto.
+            type: string
           accumulatedAmount:
-            type: object
-            properties:
-              denom:
-                type: string
-              amount:
-                type: string
-            description: >-
-              Coin defines a token with a denomination and an amount.
-
-
-              NOTE: The amount field is an Int which implements the custom
-              method
-
-              signatures required by gogoproto.
+            type: string
   tokenism30924.lottery.lottery.QueryParamsResponse:
     type: object
     properties:

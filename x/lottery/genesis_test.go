@@ -22,6 +22,7 @@ func TestGenesis(t *testing.T) {
 				Index: "1",
 			},
 		},
+
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 

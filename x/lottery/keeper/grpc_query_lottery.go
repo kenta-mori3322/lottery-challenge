@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	"strconv"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -45,9 +46,10 @@ func (k Keeper) Lottery(c context.Context, req *types.QueryGetLotteryRequest) (*
 	}
 	ctx := sdk.UnwrapSDKContext(c)
 
-	val, found := k.GetLottery(
+	n, _ := strconv.ParseUint(req.Index, 10, 64)
+	val, found, _ := k.GetLottery(
 		ctx,
-		req.Index,
+		n,
 	)
 	if !found {
 		return nil, status.Error(codes.InvalidArgument, "not found")

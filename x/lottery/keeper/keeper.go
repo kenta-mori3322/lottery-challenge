@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	"encoding/binary"
 	"fmt"
 
 	"github.com/tendermint/tendermint/libs/log"
@@ -47,4 +48,44 @@ func NewKeeper(
 
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
+}
+
+// GetOrderCount returns the current number of all orders ever exist.
+func (k Keeper) GetBetCount(ctx sdk.Context) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.BetsCountStoreKey)
+	if bz == nil {
+		return 0
+	}
+	return binary.BigEndian.Uint64(bz)
+}
+
+// GetOrderCount returns the current number of all orders ever exist.
+func (k Keeper) GetLotteryCount(ctx sdk.Context) uint64 {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.LotteryCountStoreKey)
+	if bz == nil {
+		return 0
+	}
+	return binary.BigEndian.Uint64(bz)
+}
+
+// GetNextBetCount increments and returns the current number of bets.
+// If the global bet  count is not set, it initializes it with value 0.
+func (k Keeper) GetNextBetCount(ctx sdk.Context) uint64 {
+	betCount := k.GetBetCount(ctx)
+	store := ctx.KVStore(k.storeKey)
+	bz := sdk.Uint64ToBigEndian(betCount + 1)
+	store.Set(types.BetsCountStoreKey, bz)
+	return betCount + 1
+}
+
+// GetNextLotteryCount increments and returns the current number of lotteries.
+// If the global lottery count is not set, it initializes it with value 0.
+func (k Keeper) GetNextLotteryCount(ctx sdk.Context) uint64 {
+	betCount := k.GetBetCount(ctx)
+	store := ctx.KVStore(k.storeKey)
+	bz := sdk.Uint64ToBigEndian(betCount + 1)
+	store.Set(types.LotteryCountStoreKey, bz)
+	return betCount + 1
 }
