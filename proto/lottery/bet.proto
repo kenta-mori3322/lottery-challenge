@@ -1,0 +1,12 @@
+syntax = "proto3";
+package tokenism30924.lottery.lottery;
+
+option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
+
+message Bet {
+  string index = 1; 
+  string lotteryId = 2; 
+  string amount = 3; 
+  
+}
+

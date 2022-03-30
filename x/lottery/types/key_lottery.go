@@ -33,19 +33,6 @@ var (
 	BetStoreKeyPrefix = []byte{0x03}
 )
 
-// LotteryKey returns the store key to retrieve a Lottery from the index fields
-func LotteryKey(
-	index string,
-) []byte {
-	var key []byte
-
-	indexBytes := []byte(index)
-	key = append(key, indexBytes...)
-	key = append(key, []byte("/")...)
-
-	return key
-}
-
 // ChannelStoreKey is a function to generate key for each verified channel in store
 func ChannelStoreKey(chainName, channelPort string) []byte {
 	buf := append(ChannelStoreKeyPrefix, []byte(chainName)...)
@@ -59,7 +46,7 @@ func LotteryStoreKey(LotteryID uint64) []byte {
 }
 
 // BetStoreKey is a function to generate key for each Bet in store
-func BetStoreKey(BetID uint64, LotteryId uint64) []byte {
+func BetStoreKey(BetID uint64) []byte {
 	return append(BetStoreKeyPrefix, uint64ToBytes(BetID)...)
 }
 

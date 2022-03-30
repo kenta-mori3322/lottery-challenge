@@ -9,9 +9,7 @@ option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
 // Msg defines the Msg service.
 service Msg {
       rpc EnterLottery(MsgEnterLottery) returns (MsgEnterLotteryResponse);
-  rpc CreateBet(MsgCreateBet) returns (MsgCreateBetResponse);
-  rpc UpdateBet(MsgUpdateBet) returns (MsgUpdateBetResponse);
-  rpc DeleteBet(MsgDeleteBet) returns (MsgDeleteBetResponse);
+
 // this line is used by starport scaffolding # proto/tx/rpc
 }
 
@@ -22,31 +20,5 @@ message MsgEnterLottery {
 
 message MsgEnterLotteryResponse {
 }
-
-message MsgCreateBet {
-  string creator = 1;
-  string index = 2;
-
-  string player = 3;
-  string lotteryId = 4;
-  string amount = 5;
-}
-message MsgCreateBetResponse {}
-
-message MsgUpdateBet {
-  string creator = 1;
-  string index = 2;
-
-  string player = 3;
-  string lotteryId = 4;
-  string amount = 5;
-}
-message MsgUpdateBetResponse {}
-
-message MsgDeleteBet {
-  string creator = 1;
-  string index = 2;
-}
-message MsgDeleteBetResponse {}
 
 // this line is used by starport scaffolding # proto/tx/message

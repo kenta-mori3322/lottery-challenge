@@ -20,8 +20,18 @@ export interface LotteryLottery {
 
   /** @format uint64 */
   status?: string;
-  price?: string;
-  accumulatedAmount?: string;
+
+  /**
+   * @format sdk.Coins
+   * @example [{"denom":"uatom","amount":"100000000"}]
+   */
+  price?: V1Beta1Coin[];
+
+  /**
+   * @format sdk.Coins
+   * @example [{"denom":"uatom","amount":"100000000"}]
+   */
+  accumulatedAmount?: V1Beta1Coin[];
 }
 
 export type LotteryMsgEnterLotteryResponse = object;
@@ -67,6 +77,17 @@ export interface RpcStatus {
   code?: number;
   message?: string;
   details?: ProtobufAny[];
+}
+
+/**
+* Coin defines a token with a denomination and an amount.
+
+NOTE: The amount field is an Int which implements the custom method
+signatures required by gogoproto.
+*/
+export interface V1Beta1Coin {
+  denom?: string;
+  amount?: string;
 }
 
 /**
@@ -324,7 +345,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title lottery/genesis.proto
+ * @title lottery/bet.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

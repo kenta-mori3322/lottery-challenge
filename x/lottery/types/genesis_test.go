@@ -31,6 +31,14 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 
+				BetList: []types.Bet{
+					{
+						Index: "0",
+					},
+					{
+						Index: "1",
+					},
+				},
 				// this line is used by starport scaffolding # types/genesis/validField
 			},
 			valid: true,
@@ -50,6 +58,20 @@ func TestGenesisState_Validate(t *testing.T) {
 			valid: false,
 		},
 
+		{
+			desc: "duplicated bet",
+			genState: &types.GenesisState{
+				BetList: []types.Bet{
+					{
+						Index: "0",
+					},
+					{
+						Index: "0",
+					},
+				},
+			},
+			valid: false,
+		},
 		// this line is used by starport scaffolding # types/genesis/testcase
 	} {
 		t.Run(tc.desc, func(t *testing.T) {

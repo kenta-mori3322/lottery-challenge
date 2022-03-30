@@ -130,7 +130,6 @@ export const MsgEnterLotteryResponse = {
 
 /** Msg defines the Msg service. */
 export interface Msg {
-  /** this line is used by starport scaffolding # proto/tx/rpc */
   EnterLottery(request: MsgEnterLottery): Promise<MsgEnterLotteryResponse>;
 }
 

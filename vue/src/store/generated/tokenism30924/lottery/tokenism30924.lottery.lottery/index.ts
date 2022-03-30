@@ -1,10 +1,11 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
+import { Bet } from "./module/types/lottery/bet"
 import { Lottery } from "./module/types/lottery/lottery"
 import { Params } from "./module/types/lottery/params"
 
 
-export { Lottery, Params };
+export { Bet, Lottery, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -47,6 +48,7 @@ const getDefaultState = () => {
 				LotteryAll: {},
 				
 				_Structure: {
+						Bet: getStructure(Bet.fromPartial({})),
 						Lottery: getStructure(Lottery.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						

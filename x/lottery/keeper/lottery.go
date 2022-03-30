@@ -28,7 +28,7 @@ func (k Keeper) AddBet(ctx sdk.Context, player sdk.AccAddress, amount sdk.Coins,
 
 	lotteryID := k.GetLotteryCount(ctx)
 
-	lottery, err := k.GetLottery(ctx, lotteryID)
+	lottery, _, err := k.GetLottery(ctx, lotteryID)
 	if err != nil {
 		return 0, err
 	}
@@ -51,7 +51,7 @@ func (k Keeper) AddBet(ctx sdk.Context, player sdk.AccAddress, amount sdk.Coins,
 
 func (k Keeper) CreateLottery(ctx sdk.Context, status uint64, amount sdk.Coins) (uint64, error) {
 	lotteryID := k.GetNextLotteryCount(ctx)
-	MinimumPrice := sdk.NewInt64Coin("stake", 1)
+	MinimumPrice := sdk.Coins{sdk.NewInt64Coin("stake", 1)}
 	MaxNumber := uint64(1000)
 
 	newLottery := types.Lottery{
@@ -65,12 +65,6 @@ func (k Keeper) CreateLottery(ctx sdk.Context, status uint64, amount sdk.Coins) 
 	k.SetLottery(ctx, lotteryID, newLottery)
 
 	return lotteryID, nil
-}
-
-// SetBet saves the given Bet to the open lottery to the store without performing any validation.
-func (k Keeper) SetBet(ctx sdk.Context, id uint64, bet types.Bet, lotteryID uint64) {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.BetStoreKey(id, lotteryID), k.cdc.MustMarshal(&bet))
 }
 
 func (k Keeper) SetLottery(ctx sdk.Context, id uint64, lottery types.Lottery) {
@@ -141,7 +135,7 @@ func (k Keeper) GetWinners(ctx sdk.Context, winningNumber uint64) ([]sdk.AccAddr
 //close lottery
 func (k Keeper) CloseLottery(ctx sdk.Context) {
 	lotteryId := k.GetLotteryCount(ctx)
-	lottery, err := k.GetLottery(ctx, lotteryId)
+	lottery, _, err := k.GetLottery(ctx, lotteryId)
 	if err != nil {
 		panic("error closing lottery")
 	}
