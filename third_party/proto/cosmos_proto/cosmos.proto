@@ -13,4 +13,10 @@ extend google.protobuf.MessageOptions {
 
 extend google.protobuf.FieldOptions {
     string accepts_interface = 93001;
+
+    // scalar is used to indicate that this field follows the formatting defined
+    // by the named scalar which should be declared with declare_scalar. Code
+    // generators may choose to use this information to map this field to a
+    // language-specific type representing the scalar.
+    string scalar = 93002;
 }

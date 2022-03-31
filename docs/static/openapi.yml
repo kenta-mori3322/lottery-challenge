@@ -47344,6 +47344,11 @@ definitions:
             signatures required by gogoproto.
   tokenism30924.lottery.lottery.MsgEnterLotteryResponse:
     type: object
+    properties:
+      code:
+        type: string
+      msg:
+        type: string
   tokenism30924.lottery.lottery.Params:
     type: object
     description: Params defines the parameters for the module.

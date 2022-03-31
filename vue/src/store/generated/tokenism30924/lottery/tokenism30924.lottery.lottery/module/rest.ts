@@ -34,7 +34,10 @@ export interface LotteryLottery {
   accumulatedAmount?: V1Beta1Coin[];
 }
 
-export type LotteryMsgEnterLotteryResponse = object;
+export interface LotteryMsgEnterLotteryResponse {
+  code?: string;
+  msg?: string;
+}
 
 /**
  * Params defines the parameters for the module.

@@ -8,7 +8,10 @@ export interface MsgEnterLottery {
   betAmount: string;
 }
 
-export interface MsgEnterLotteryResponse {}
+export interface MsgEnterLotteryResponse {
+  code: string;
+  msg: string;
+}
 
 const baseMsgEnterLottery: object = { creator: "", betAmount: "" };
 
@@ -82,10 +85,19 @@ export const MsgEnterLottery = {
   },
 };
 
-const baseMsgEnterLotteryResponse: object = {};
+const baseMsgEnterLotteryResponse: object = { code: "", msg: "" };
 
 export const MsgEnterLotteryResponse = {
-  encode(_: MsgEnterLotteryResponse, writer: Writer = Writer.create()): Writer {
+  encode(
+    message: MsgEnterLotteryResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.code !== "") {
+      writer.uint32(10).string(message.code);
+    }
+    if (message.msg !== "") {
+      writer.uint32(18).string(message.msg);
+    }
     return writer;
   },
 
@@ -98,6 +110,12 @@ export const MsgEnterLotteryResponse = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
+        case 1:
+          message.code = reader.string();
+          break;
+        case 2:
+          message.msg = reader.string();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -106,24 +124,46 @@ export const MsgEnterLotteryResponse = {
     return message;
   },
 
-  fromJSON(_: any): MsgEnterLotteryResponse {
+  fromJSON(object: any): MsgEnterLotteryResponse {
     const message = {
       ...baseMsgEnterLotteryResponse,
     } as MsgEnterLotteryResponse;
+    if (object.code !== undefined && object.code !== null) {
+      message.code = String(object.code);
+    } else {
+      message.code = "";
+    }
+    if (object.msg !== undefined && object.msg !== null) {
+      message.msg = String(object.msg);
+    } else {
+      message.msg = "";
+    }
     return message;
   },
 
-  toJSON(_: MsgEnterLotteryResponse): unknown {
+  toJSON(message: MsgEnterLotteryResponse): unknown {
     const obj: any = {};
+    message.code !== undefined && (obj.code = message.code);
+    message.msg !== undefined && (obj.msg = message.msg);
     return obj;
   },
 
   fromPartial(
-    _: DeepPartial<MsgEnterLotteryResponse>
+    object: DeepPartial<MsgEnterLotteryResponse>
   ): MsgEnterLotteryResponse {
     const message = {
       ...baseMsgEnterLotteryResponse,
     } as MsgEnterLotteryResponse;
+    if (object.code !== undefined && object.code !== null) {
+      message.code = object.code;
+    } else {
+      message.code = "";
+    }
+    if (object.msg !== undefined && object.msg !== null) {
+      message.msg = object.msg;
+    } else {
+      message.msg = "";
+    }
     return message;
   },
 };

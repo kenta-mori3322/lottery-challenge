@@ -19,6 +19,8 @@ message MsgEnterLottery {
 }
 
 message MsgEnterLotteryResponse {
+  string code = 1;
+  string msg = 2;
 }
 
 // this line is used by starport scaffolding # proto/tx/message

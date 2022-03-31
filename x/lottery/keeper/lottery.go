@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -23,35 +25,61 @@ func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
 	return
 }
 
-func (k Keeper) AddBet(ctx sdk.Context, player sdk.AccAddress, amount sdk.Coins, number uint64) (uint64, error) {
-	betID := k.GetNextBetCount(ctx)
-
+func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAddress, amount sdk.Coins) (uint64, error) {
+	// Get current lottery id
 	lotteryID := k.GetLotteryCount(ctx)
 
+	// Get current lottery
 	lottery, _, err := k.GetLottery(ctx, lotteryID)
 	if err != nil {
 		return 0, err
 	}
-	// TODO: Config chain name
-	//collateralChain := "band-cosmoshub"
 
-	// TODO: Support only 1 coin
-	if len(amount) != 1 {
-		return 0, sdkerrors.Wrapf(types.ErrOnlyOneDenomAllowed, "%d denoms included", len(amount))
+	// if lottery was closed, then can't add bet
+	if lottery.Status == 0 {
+		return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "lottery %d was closed", lotteryID)
 	}
 
-	// escrow source tokens. It fails if balance insufficient.
-	//if amount[1] < types.StandardPrice{
-	//	return 0, sdkerrors.Wrapf(types.ErrorInvalidAmount, "%d invalid amount", len(amount[1]))
+	// Check if the player is already bet on the current lottery
+	iterator := k.GetBetsIterator(ctx)
 
-	k.SetBet(ctx, betID, types.NewBet(player, number, lottery), lotteryID)
+	// iterator all bets
+	for ; iterator.Valid(); iterator.Next() {
+		var bet types.Bet
+		k.cdc.MustUnmarshal(iterator.Value(), &bet)
+
+		// skip bet that is not on the current lottery
+		if bet.LotteryId != lotteryID {
+			continue
+		}
+
+		// if the player is already bet on current lottery,
+		if bet.Name == playerName {
+			return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "This player already have bet on %d lottery", lotteryID)
+		}
+	}
+
+	// Generate a new bet ID
+	betID := k.GetNextBetCount(ctx)
+
+	// Create a new instance of Bet
+	newBet := types.Bet{
+		Index:     fmt.Sprintf("%d", betID),
+		Name:      playerName,
+		Player:    playerAddr,
+		LotteryId: lotteryID,
+		Amount:    amount,
+	}
+
+	// Save to store
+	k.SetBet(ctx, betID, newBet)
 
 	return betID, nil
 }
 
 func (k Keeper) CreateLottery(ctx sdk.Context, status uint64, amount sdk.Coins) (uint64, error) {
 	lotteryID := k.GetNextLotteryCount(ctx)
-	MinimumPrice := sdk.Coins{sdk.NewInt64Coin("stake", 1)}
+	MinimumPrice := sdk.Coins{sdk.NewInt64Coin("token", 1)}
 	MaxNumber := uint64(1000)
 
 	newLottery := types.Lottery{
@@ -95,7 +123,7 @@ func (k Keeper) GetWinners(ctx sdk.Context, winningNumber uint64) ([]sdk.AccAddr
 	//bets := make([]types.Bet, 1)
 
 	//result = append(s, "d")
-	loteryId := k.GetLotteryCount(ctx)
+	// loteryId := k.GetLotteryCount(ctx)
 
 	//store := ctx.KVStore(k.storeKey)
 	//if !store.Has(types.BetStoreKey(loterryId,loterryId)) {
@@ -112,9 +140,9 @@ func (k Keeper) GetWinners(ctx sdk.Context, winningNumber uint64) ([]sdk.AccAddr
 		k.cdc.MustUnmarshal(iterator.Value(), &bet)
 		//bet := types.Bet(iterator.Value())
 
-		if bet.LotteryNumber == winningNumber && loteryId == bet.Lottery.Id {
-			result = append(result, bet.Player)
-		}
+		// if bet.LotteryNumber == winningNumber && loteryId == bet.Lottery.Id {
+		// 	result = append(result, bet.Player)
+		// }
 
 		//bets = append(bets, types.Bet(iterator.Value()))
 	}
