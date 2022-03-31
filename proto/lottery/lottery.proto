@@ -30,4 +30,6 @@ message Lottery {
       example : "[{\"denom\": \"uatom\", \"amount\": \"100000000\"}]",
       format : "sdk.Coins"
     }];
+
+  uint64 betCount = 9; // number of bets participated
 }

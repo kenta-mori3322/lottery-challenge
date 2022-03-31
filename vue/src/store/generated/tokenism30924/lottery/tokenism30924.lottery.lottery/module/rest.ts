@@ -36,6 +36,9 @@ export interface LotteryLottery {
    * @example [{"denom":"uatom","amount":"100000000"}]
    */
   accumulatedAmount?: V1Beta1Coin[];
+
+  /** @format uint64 */
+  betCount?: string;
 }
 
 export interface LotteryMsgEnterLotteryResponse {

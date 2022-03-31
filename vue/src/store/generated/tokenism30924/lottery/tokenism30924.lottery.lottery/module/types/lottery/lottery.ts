@@ -15,6 +15,8 @@ export interface Lottery {
   proposer: Uint8Array;
   price: Coin[];
   accumulatedAmount: Coin[];
+  /** number of bets participated */
+  betCount: number;
 }
 
 const baseLottery: object = {
@@ -22,6 +24,7 @@ const baseLottery: object = {
   winningNumber: 0,
   winnerName: "",
   status: 0,
+  betCount: 0,
 };
 
 export const Lottery = {
@@ -49,6 +52,9 @@ export const Lottery = {
     }
     for (const v of message.accumulatedAmount) {
       Coin.encode(v!, writer.uint32(66).fork()).ldelim();
+    }
+    if (message.betCount !== 0) {
+      writer.uint32(72).uint64(message.betCount);
     }
     return writer;
   },
@@ -85,6 +91,9 @@ export const Lottery = {
           break;
         case 8:
           message.accumulatedAmount.push(Coin.decode(reader, reader.uint32()));
+          break;
+        case 9:
+          message.betCount = longToNumber(reader.uint64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -137,6 +146,11 @@ export const Lottery = {
         message.accumulatedAmount.push(Coin.fromJSON(e));
       }
     }
+    if (object.betCount !== undefined && object.betCount !== null) {
+      message.betCount = Number(object.betCount);
+    } else {
+      message.betCount = 0;
+    }
     return message;
   },
 
@@ -169,6 +183,7 @@ export const Lottery = {
     } else {
       obj.accumulatedAmount = [];
     }
+    message.betCount !== undefined && (obj.betCount = message.betCount);
     return obj;
   },
 
@@ -218,6 +233,11 @@ export const Lottery = {
       for (const e of object.accumulatedAmount) {
         message.accumulatedAmount.push(Coin.fromPartial(e));
       }
+    }
+    if (object.betCount !== undefined && object.betCount !== null) {
+      message.betCount = object.betCount;
+    } else {
+      message.betCount = 0;
     }
     return message;
   },

@@ -27754,6 +27754,9 @@ paths:
                           custom method
 
                           signatures required by gogoproto.
+                    betCount:
+                      type: string
+                      format: uint64
               pagination:
                 type: object
                 properties:
@@ -27929,6 +27932,9 @@ paths:
                         custom method
 
                         signatures required by gogoproto.
+                  betCount:
+                    type: string
+                    format: uint64
         default:
           description: An unexpected error response.
           schema:
@@ -47357,6 +47363,9 @@ definitions:
 
             NOTE: The amount field is an Int which implements the custom method
             signatures required by gogoproto.
+      betCount:
+        type: string
+        format: uint64
   tokenism30924.lottery.lottery.MsgEnterLotteryResponse:
     type: object
     properties:
@@ -47433,6 +47442,9 @@ definitions:
                   method
 
                   signatures required by gogoproto.
+            betCount:
+              type: string
+              format: uint64
       pagination:
         type: object
         properties:
@@ -47522,6 +47534,9 @@ definitions:
                 method
 
                 signatures required by gogoproto.
+          betCount:
+            type: string
+            format: uint64
   tokenism30924.lottery.lottery.QueryParamsResponse:
     type: object
     properties:
