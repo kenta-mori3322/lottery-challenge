@@ -7,17 +7,20 @@ export const protobufPackage = "tokenism30924.lottery.lottery";
 
 export interface Lottery {
   index: string;
-  maxNumber: number;
   winningNumber: number;
+  winnerName: string;
+  winnerAddress: Uint8Array;
+  /** 0: closed, 1: opened */
   status: number;
+  proposer: Uint8Array;
   price: Coin[];
   accumulatedAmount: Coin[];
 }
 
 const baseLottery: object = {
   index: "",
-  maxNumber: 0,
   winningNumber: 0,
+  winnerName: "",
   status: 0,
 };
 
@@ -26,20 +29,26 @@ export const Lottery = {
     if (message.index !== "") {
       writer.uint32(10).string(message.index);
     }
-    if (message.maxNumber !== 0) {
-      writer.uint32(16).uint64(message.maxNumber);
-    }
     if (message.winningNumber !== 0) {
-      writer.uint32(24).uint64(message.winningNumber);
+      writer.uint32(16).uint64(message.winningNumber);
+    }
+    if (message.winnerName !== "") {
+      writer.uint32(26).string(message.winnerName);
+    }
+    if (message.winnerAddress.length !== 0) {
+      writer.uint32(34).bytes(message.winnerAddress);
     }
     if (message.status !== 0) {
-      writer.uint32(32).uint64(message.status);
+      writer.uint32(40).uint64(message.status);
+    }
+    if (message.proposer.length !== 0) {
+      writer.uint32(50).bytes(message.proposer);
     }
     for (const v of message.price) {
-      Coin.encode(v!, writer.uint32(42).fork()).ldelim();
+      Coin.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     for (const v of message.accumulatedAmount) {
-      Coin.encode(v!, writer.uint32(50).fork()).ldelim();
+      Coin.encode(v!, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -57,18 +66,24 @@ export const Lottery = {
           message.index = reader.string();
           break;
         case 2:
-          message.maxNumber = longToNumber(reader.uint64() as Long);
-          break;
-        case 3:
           message.winningNumber = longToNumber(reader.uint64() as Long);
           break;
+        case 3:
+          message.winnerName = reader.string();
+          break;
         case 4:
-          message.status = longToNumber(reader.uint64() as Long);
+          message.winnerAddress = reader.bytes();
           break;
         case 5:
-          message.price.push(Coin.decode(reader, reader.uint32()));
+          message.status = longToNumber(reader.uint64() as Long);
           break;
         case 6:
+          message.proposer = reader.bytes();
+          break;
+        case 7:
+          message.price.push(Coin.decode(reader, reader.uint32()));
+          break;
+        case 8:
           message.accumulatedAmount.push(Coin.decode(reader, reader.uint32()));
           break;
         default:
@@ -88,20 +103,26 @@ export const Lottery = {
     } else {
       message.index = "";
     }
-    if (object.maxNumber !== undefined && object.maxNumber !== null) {
-      message.maxNumber = Number(object.maxNumber);
-    } else {
-      message.maxNumber = 0;
-    }
     if (object.winningNumber !== undefined && object.winningNumber !== null) {
       message.winningNumber = Number(object.winningNumber);
     } else {
       message.winningNumber = 0;
     }
+    if (object.winnerName !== undefined && object.winnerName !== null) {
+      message.winnerName = String(object.winnerName);
+    } else {
+      message.winnerName = "";
+    }
+    if (object.winnerAddress !== undefined && object.winnerAddress !== null) {
+      message.winnerAddress = bytesFromBase64(object.winnerAddress);
+    }
     if (object.status !== undefined && object.status !== null) {
       message.status = Number(object.status);
     } else {
       message.status = 0;
+    }
+    if (object.proposer !== undefined && object.proposer !== null) {
+      message.proposer = bytesFromBase64(object.proposer);
     }
     if (object.price !== undefined && object.price !== null) {
       for (const e of object.price) {
@@ -122,10 +143,20 @@ export const Lottery = {
   toJSON(message: Lottery): unknown {
     const obj: any = {};
     message.index !== undefined && (obj.index = message.index);
-    message.maxNumber !== undefined && (obj.maxNumber = message.maxNumber);
     message.winningNumber !== undefined &&
       (obj.winningNumber = message.winningNumber);
+    message.winnerName !== undefined && (obj.winnerName = message.winnerName);
+    message.winnerAddress !== undefined &&
+      (obj.winnerAddress = base64FromBytes(
+        message.winnerAddress !== undefined
+          ? message.winnerAddress
+          : new Uint8Array()
+      ));
     message.status !== undefined && (obj.status = message.status);
+    message.proposer !== undefined &&
+      (obj.proposer = base64FromBytes(
+        message.proposer !== undefined ? message.proposer : new Uint8Array()
+      ));
     if (message.price) {
       obj.price = message.price.map((e) => (e ? Coin.toJSON(e) : undefined));
     } else {
@@ -150,20 +181,30 @@ export const Lottery = {
     } else {
       message.index = "";
     }
-    if (object.maxNumber !== undefined && object.maxNumber !== null) {
-      message.maxNumber = object.maxNumber;
-    } else {
-      message.maxNumber = 0;
-    }
     if (object.winningNumber !== undefined && object.winningNumber !== null) {
       message.winningNumber = object.winningNumber;
     } else {
       message.winningNumber = 0;
     }
+    if (object.winnerName !== undefined && object.winnerName !== null) {
+      message.winnerName = object.winnerName;
+    } else {
+      message.winnerName = "";
+    }
+    if (object.winnerAddress !== undefined && object.winnerAddress !== null) {
+      message.winnerAddress = object.winnerAddress;
+    } else {
+      message.winnerAddress = new Uint8Array();
+    }
     if (object.status !== undefined && object.status !== null) {
       message.status = object.status;
     } else {
       message.status = 0;
+    }
+    if (object.proposer !== undefined && object.proposer !== null) {
+      message.proposer = object.proposer;
+    } else {
+      message.proposer = new Uint8Array();
     }
     if (object.price !== undefined && object.price !== null) {
       for (const e of object.price) {
@@ -191,6 +232,29 @@ var globalThis: any = (() => {
   if (typeof global !== "undefined") return global;
   throw "Unable to locate global object";
 })();
+
+const atob: (b64: string) => string =
+  globalThis.atob ||
+  ((b64) => globalThis.Buffer.from(b64, "base64").toString("binary"));
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+const btoa: (bin: string) => string =
+  globalThis.btoa ||
+  ((bin) => globalThis.Buffer.from(bin, "binary").toString("base64"));
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(""));
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

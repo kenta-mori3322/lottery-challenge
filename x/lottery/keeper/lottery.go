@@ -29,13 +29,18 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	// Get current lottery id
 	lotteryID := k.GetLotteryCount(ctx)
 
+	// If there isn't any lottery created
+	if lotteryID == 0 {
+		return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "There are %d lotteries available", lotteryID)
+	}
+
 	// Get current lottery
 	lottery, _, err := k.GetLottery(ctx, lotteryID)
 	if err != nil {
 		return 0, err
 	}
 
-	// if lottery was closed, then can't add bet
+	// If lottery was closed, then can't add bet
 	if lottery.Status == 0 {
 		return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "lottery %d was closed", lotteryID)
 	}
@@ -43,7 +48,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	// Check if the player is already bet on the current lottery
 	iterator := k.GetBetsIterator(ctx)
 
-	// iterator all bets
+	// Iterate all bets
 	for ; iterator.Valid(); iterator.Next() {
 		var bet types.Bet
 		k.cdc.MustUnmarshal(iterator.Value(), &bet)
@@ -77,24 +82,32 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	return betID, nil
 }
 
-func (k Keeper) CreateLottery(ctx sdk.Context, status uint64, amount sdk.Coins) (uint64, error) {
+func (k Keeper) CreateLottery(ctx sdk.Context, proposer sdk.AccAddress, status uint64, amount sdk.Coins) (uint64, error) {
+	// Generates a new lottery ID
 	lotteryID := k.GetNextLotteryCount(ctx)
-	MinimumPrice := sdk.Coins{sdk.NewInt64Coin("token", 1)}
-	MaxNumber := uint64(1000)
 
+	// Minimum prices for bet
+	MinimumPrice := sdk.Coins{sdk.NewInt64Coin("token", 1)}
+
+	// Create a new lottery block/instance
 	newLottery := types.Lottery{
-		Index:             string(lotteryID),
+		Index:             fmt.Sprintf("%d", lotteryID),
 		Status:            status,
 		Price:             MinimumPrice,
-		MaxNumber:         MaxNumber,
+		WinningNumber:     uint64(10000),
+		WinnerName:        "",
+		WinnerAddress:     nil,
+		Proposer:          proposer,
 		AccumulatedAmount: amount,
 	}
 
+	// Store the created lottery
 	k.SetLottery(ctx, lotteryID, newLottery)
 
 	return lotteryID, nil
 }
 
+// Store lottery
 func (k Keeper) SetLottery(ctx sdk.Context, id uint64, lottery types.Lottery) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.LotteryStoreKey(id), k.cdc.MustMarshal(&lottery))

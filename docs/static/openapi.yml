@@ -27696,15 +27696,20 @@ paths:
                   properties:
                     index:
                       type: string
-                    maxNumber:
-                      type: string
-                      format: uint64
                     winningNumber:
                       type: string
                       format: uint64
+                    winnerName:
+                      type: string
+                    winnerAddress:
+                      type: string
+                      format: byte
                     status:
                       type: string
                       format: uint64
+                    proposer:
+                      type: string
+                      format: byte
                     price:
                       type: array
                       format: sdk.Coins
@@ -27868,15 +27873,20 @@ paths:
                 properties:
                   index:
                     type: string
-                  maxNumber:
-                    type: string
-                    format: uint64
                   winningNumber:
                     type: string
                     format: uint64
+                  winnerName:
+                    type: string
+                  winnerAddress:
+                    type: string
+                    format: byte
                   status:
                     type: string
                     format: uint64
+                  proposer:
+                    type: string
+                    format: byte
                   price:
                     type: array
                     format: sdk.Coins
@@ -47297,15 +47307,20 @@ definitions:
     properties:
       index:
         type: string
-      maxNumber:
-        type: string
-        format: uint64
       winningNumber:
         type: string
         format: uint64
+      winnerName:
+        type: string
+      winnerAddress:
+        type: string
+        format: byte
       status:
         type: string
         format: uint64
+      proposer:
+        type: string
+        format: byte
       price:
         type: array
         format: sdk.Coins
@@ -47362,15 +47377,20 @@ definitions:
           properties:
             index:
               type: string
-            maxNumber:
-              type: string
-              format: uint64
             winningNumber:
               type: string
               format: uint64
+            winnerName:
+              type: string
+            winnerAddress:
+              type: string
+              format: byte
             status:
               type: string
               format: uint64
+            proposer:
+              type: string
+              format: byte
             price:
               type: array
               format: sdk.Coins
@@ -47446,15 +47466,20 @@ definitions:
         properties:
           index:
             type: string
-          maxNumber:
-            type: string
-            format: uint64
           winningNumber:
             type: string
             format: uint64
+          winnerName:
+            type: string
+          winnerAddress:
+            type: string
+            format: byte
           status:
             type: string
             format: uint64
+          proposer:
+            type: string
+            format: byte
           price:
             type: array
             format: sdk.Coins

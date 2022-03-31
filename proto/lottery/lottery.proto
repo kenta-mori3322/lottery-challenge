@@ -9,11 +9,13 @@ option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
 
 message Lottery {
   string index = 1; 
-  uint64 maxNumber = 2; 
-  uint64 winningNumber = 3; 
-  uint64 status = 4; 
+  uint64 winningNumber = 2; 
+  string winnerName = 3;
+  bytes  winnerAddress = 4;
+  uint64 status = 5; // 0: closed, 1: opened
+  bytes  proposer = 6; 
 
-  repeated cosmos.base.v1beta1.Coin price = 5 [
+  repeated cosmos.base.v1beta1.Coin price = 7 [
     (gogoproto.nullable) = false, 
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
@@ -21,7 +23,7 @@ message Lottery {
       format : "sdk.Coins"
     }];
 
-  repeated cosmos.base.v1beta1.Coin accumulatedAmount = 6 [
+  repeated cosmos.base.v1beta1.Coin accumulatedAmount = 8 [
     (gogoproto.nullable) = false, 
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {

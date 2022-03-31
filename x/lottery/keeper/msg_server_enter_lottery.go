@@ -54,5 +54,5 @@ func (k msgServer) EnterLottery(goCtx context.Context, msg *types.MsgEnterLotter
 	// Now put this bet on blockchain at certain lottery
 	k.Keeper.AddBet(ctx, msg.Creator, player, betAmount)
 
-	return &types.MsgEnterLotteryResponse{}, nil
+	return &types.MsgEnterLotteryResponse{Code: "200", Msg: "Successfully bet on current lottery"}, nil
 }

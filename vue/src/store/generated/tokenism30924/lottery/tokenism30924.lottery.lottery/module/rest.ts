@@ -13,13 +13,17 @@ export interface LotteryLottery {
   index?: string;
 
   /** @format uint64 */
-  maxNumber?: string;
-
-  /** @format uint64 */
   winningNumber?: string;
+  winnerName?: string;
+
+  /** @format byte */
+  winnerAddress?: string;
 
   /** @format uint64 */
   status?: string;
+
+  /** @format byte */
+  proposer?: string;
 
   /**
    * @format sdk.Coins
