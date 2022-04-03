@@ -14,19 +14,18 @@ var _ = strconv.Itoa(0)
 
 func CmdEnterLottery() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "enter-lottery [from-account] [bet-amount]",
+		Use:   "enter-lottery [bet-amount]",
 		Short: "Broadcast message enter-lottery",
-		Args:  cobra.ExactArgs(2),
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) (err error) {
-			argFromAccount := args[0]
-			argBetAmount := args[1]
+			argBetAmount := args[0]
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
 				return err
 			}
 
 			msg := types.NewMsgEnterLottery(
-				argFromAccount,
+				clientCtx.GetFromAddress().String(),
 				argBetAmount,
 			)
 			if err := msg.ValidateBasic(); err != nil {

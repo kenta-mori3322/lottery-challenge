@@ -40,13 +40,71 @@ devnet-prepare:
 	./scripts/prepare-devnet.sh
 
 devnet-start:
-	DAEMON_NAME=meled DAEMON_HOME=~/.meled DAEMON_ALLOW_DOWNLOAD_BINARIES=true DAEMON_RESTART_AFTER_UPGRADE=true \
-    meled-manager start --pruning="nothing" --inv-check-period 5
+	DAEMON_NAME=lotteryd DAEMON_HOME=~/.lotteryd DAEMON_ALLOW_DOWNLOAD_BINARIES=true DAEMON_RESTART_AFTER_UPGRADE=true \
+    lottery start --pruning="nothing" --inv-check-period 5
 
 # Clean up the build directory
 clean:
 	rm -rf build/
 
+
+# Localnet
+
+# Build nodes using Docker
+build-docker:
+	$(MAKE) -C networks/local
+
+# Run a 4-node testnet locally
+localnet-start: build-linux localnet-stop
+	@if ! [ -f build/node0/lotteryd/config/genesis.json ]; then docker run --rm -v $(CURDIR)/build:/lotteryd:Z lottery/core testnet --v 4 -o . --starting-ip-address 192.168.10.2 --keyring-backend=test --chain-id test ; fi
+	./scripts/import-localnet-seeds.sh
+	docker-compose up
+
+# Stop testnet
+localnet-stop:
+	docker-compose down
+
+localnet: clean build-linux build-docker localnet-start
+
+###############################################################################
+###                                Protobuf                                 ###
+###############################################################################
+
+protoVer=v0.3
+protoImageName=tendermintdev/sdk-proto-gen:$(protoVer)
+containerProtoGen=$(PROJECT_NAME)-proto-gen-$(protoVer)
+containerProtoGenAny=$(PROJECT_NAME)-proto-gen-any-$(protoVer)
+containerProtoGenSwagger=$(PROJECT_NAME)-proto-gen-swagger-$(protoVer)
+containerProtoFmt=$(PROJECT_NAME)-proto-fmt-$(protoVer)
+
+proto-all: proto-format proto-lint proto-gen
+
+proto-gen:
+	docker run --rm -v $(CURDIR):/workspace --workdir /workspace bharvest/liquidity-proto-gen sh ./scripts/protocgen.sh
+	go mod tidy
+
+# This generates the SDK's custom wrapper for google.protobuf.Any. It should only be run manually when needed
+proto-gen-js:
+	@echo "Generating Protobuf Typescript"
+	bash ./scripts/protocgen-js.sh
+
+proto-swagger-gen:
+	@echo "Generating Protobuf Swagger"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoGenSwagger}$$"; then docker start -a $(containerProtoGenSwagger); else docker run --name $(containerProtoGenSwagger) -v $(CURDIR):/workspace --workdir /workspace $(protoImageName) \
+		sh ./scripts/protoc-swagger-gen.sh; fi
+
+proto-format:
+	@echo "Formatting Protobuf files"
+	@if docker ps -a --format '{{.Names}}' | grep -Eq "^${containerProtoFmt}$$"; then docker start -a $(containerProtoFmt); else docker run --name $(containerProtoFmt) -v $(CURDIR):/workspace --workdir /workspace tendermintdev/docker-build-proto \
+		find ./ -not -path "./third_party/*" -name "*.proto" -exec clang-format -i {} \; ; fi
+
+
+proto-lint:
+	@$(DOCKER_BUF) lint --error-format=json
+
+proto-check-breaking:
+	@$(DOCKER_BUF) breaking --against $(HTTPS_GIT)#branch=master
+
 # Create log files
 log-files:
-	sudo mkdir -p /var/log/meled && sudo touch /var/log/meled/meled.log && sudo touch /var/log/meled/meled_error.log
+	sudo mkdir -p /var/log/lotteryd && sudo touch /var/log/lotteryd/lotteryd.log && sudo touch /var/log/lotteryd/lotteryd_error.log
