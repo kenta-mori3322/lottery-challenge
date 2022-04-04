@@ -176,10 +176,11 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	zeroAmount := sdk.Coins{sdk.NewInt64Coin("token", 0)}
 
 	// Create a new lottery block each time is going to create a new tendermint block
-	am.keeper.CreateLottery(ctx, proposer, uint64(1), zeroAmount)
+	lotID, _ := am.keeper.CreateLottery(ctx, proposer, uint64(1), zeroAmount)
 
 	// logs
-	fmt.Println("A new lottery block created")
+	sLotID := fmt.Sprintf("%d", lotID)
+	fmt.Println("A new lottery ", sLotID ,"block created")
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
@@ -188,9 +189,11 @@ func (am AppModule) EndBlock(ctk sdk.Context, _ abci.RequestEndBlock) []abci.Val
 	ctk.Logger().With("module", fmt.Sprintf("End Block---x/%s", types.ModuleName))
 
 	// Suggest to close lottery, here it determines the winner and payout the fees
-	am.keeper.CloseLottery(ctk)
+	succeed := am.keeper.CloseLottery(ctk)
 
 	// logs
-	fmt.Println("A new lottery block closed")
+	if succeed {
+		fmt.Println("A new lottery block closed")
+	}
 	return []abci.ValidatorUpdate{}
 }

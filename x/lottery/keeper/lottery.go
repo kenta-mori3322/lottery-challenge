@@ -165,7 +165,8 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	// Get current lottery block
 	lottery, _, err := k.GetLottery(ctx, lotteryID)
 	if err != nil {
-		panic("error closing lottery")
+		fmt.Println("error closing lottery")
+		return false, err
 	}
 
 	// Bet array for current lottery block
@@ -272,16 +273,18 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 }
 
 //close lottery
-func (k Keeper) CloseLottery(ctx sdk.Context) {
+func (k Keeper) CloseLottery(ctx sdk.Context) (bool) {
 	lotteryId := k.GetLotteryCount(ctx)
 	lottery, _, err := k.GetLottery(ctx, lotteryId)
 	if err != nil {
-		panic("error closing lottery")
+		fmt.Println("no such lottery")
+		return false
 	}
 
 	// if there is not enough bets in the current lottery, then skip over it
 	if lottery.BetCount < 4 {
-		panic("There should be at least 4 enter lottery transactions per lottery")
+		fmt.Println("There should be at least 4 enter lottery transactions per lottery")
+		return false
 	}
 
 	// determin the winner in the current lottery
@@ -289,9 +292,11 @@ func (k Keeper) CloseLottery(ctx sdk.Context) {
 
 	// if it is not successful
 	if !succeed {
-		panic("error while determining the winner")
+		fmt.Println("error while determining the winner")
 	}
 
 	// Logs
 	fmt.Println("Successfully closed lottery block")
+
+	return succeed
 }
