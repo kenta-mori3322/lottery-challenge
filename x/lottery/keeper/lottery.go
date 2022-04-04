@@ -15,8 +15,9 @@ import (
 
 // GetAllLottery returns all lottery
 func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(string(types.LotteryStoreKeyPrefix)))
-	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.LotteryStoreKeyPrefix)
+	// iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	iterator := store.Iterator(nil, nil)
 
 	defer iterator.Close()
 
@@ -26,7 +27,7 @@ func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
 		list = append(list, val)
 	}
 
-	return
+	return list
 }
 
 func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAddress, amount sdk.Coins) (uint64, error) {
@@ -144,7 +145,10 @@ func (k Keeper) GetLottery(ctx sdk.Context, id uint64) (types.Lottery, bool, err
 // Get an iterator over all bets
 func (k Keeper) GetBetsIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.storeKey)
-	return sdk.KVStorePrefixIterator(store, []byte{})
+	betStore := prefix.NewStore(store, types.BetStoreKeyPrefix)
+	// return sdk.KVStorePrefixIterator(store, []byte{})
+
+	return betStore.Iterator(nil, nil)
 }
 
 // Convert byte array to uint64
@@ -237,7 +241,6 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	}
 
 	// Accumulate the whole lottery pool amount
-
 	wholeLotteryPoolAmount := sdk.Coins{sdk.NewInt64Coin("token", 0)}
 	allLotteries := k.GetAllLottery(ctx)
 	for _, l := range allLotteries {

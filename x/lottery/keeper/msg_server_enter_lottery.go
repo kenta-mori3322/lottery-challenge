@@ -48,11 +48,14 @@ func (k msgServer) EnterLottery(goCtx context.Context, msg *types.MsgEnterLotter
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Player doens't have enough balance")
 	}
 
-	// send tokens from the buyer's account to the module's account (as a payment for the name)
-	k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, betAmount.Add(lotteryFee...))
-
 	// Now put this bet on blockchain at certain lottery
-	k.Keeper.AddBet(ctx, msg.Creator, player, betAmount)
+	_, err = k.Keeper.AddBet(ctx, msg.Creator, player, betAmount)
 
-	return &types.MsgEnterLotteryResponse{Code: "200", Msg: "Successfully bet on current lottery"}, nil
+	if err == nil {
+		// send tokens from the buyer's account to the module's account (as a payment for the name)
+		k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, betAmount.Add(lotteryFee...))
+		return &types.MsgEnterLotteryResponse{Code: "200", Msg: "Successfully bet on current lottery"}, nil
+	}
+
+	return &types.MsgEnterLotteryResponse{Code: "501", Msg: "Internal error"}, nil
 }

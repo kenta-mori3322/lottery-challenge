@@ -4,9 +4,7 @@ import (
 	"context"
 	"strconv"
 
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/types/query"
 	"github.com/tokenism30924/lottery/x/lottery/types"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -16,28 +14,13 @@ func (k Keeper) LotteryAll(c context.Context, req *types.QueryAllLotteryRequest)
 	if req == nil {
 		return nil, status.Error(codes.InvalidArgument, "invalid request")
 	}
-
-	var lotterys []types.Lottery
+	//Context
 	ctx := sdk.UnwrapSDKContext(c)
 
-	store := ctx.KVStore(k.storeKey)
-	lotteryStore := prefix.NewStore(store, types.KeyPrefix(types.LotteryKeyPrefix))
+	// Get all lotteries
+	lotterys := k.GetAllLottery(ctx)
 
-	pageRes, err := query.Paginate(lotteryStore, req.Pagination, func(key []byte, value []byte) error {
-		var lottery types.Lottery
-		if err := k.cdc.Unmarshal(value, &lottery); err != nil {
-			return err
-		}
-
-		lotterys = append(lotterys, lottery)
-		return nil
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &types.QueryAllLotteryResponse{Lottery: lotterys, Pagination: pageRes}, nil
+	return &types.QueryAllLotteryResponse{Lottery: lotterys}, nil
 }
 
 func (k Keeper) Lottery(c context.Context, req *types.QueryGetLotteryRequest) (*types.QueryGetLotteryResponse, error) {

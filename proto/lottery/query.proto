@@ -50,12 +50,10 @@ message QueryGetLotteryResponse {
 }
 
 message QueryAllLotteryRequest {
-	cosmos.base.query.v1beta1.PageRequest pagination = 1;
 }
 
 message QueryAllLotteryResponse {
 	repeated Lottery lottery = 1 [(gogoproto.nullable) = false];
-	cosmos.base.query.v1beta1.PageResponse pagination = 2;
 }
 
 // this line is used by starport scaffolding # 3

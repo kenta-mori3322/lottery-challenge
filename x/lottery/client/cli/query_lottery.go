@@ -16,16 +16,9 @@ func CmdListLottery() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
 
-			pageReq, err := client.ReadPageRequest(cmd.Flags())
-			if err != nil {
-				return err
-			}
-
 			queryClient := types.NewQueryClient(clientCtx)
 
-			params := &types.QueryAllLotteryRequest{
-				Pagination: pageReq,
-			}
+			params := &types.QueryAllLotteryRequest{}
 
 			res, err := queryClient.LotteryAll(context.Background(), params)
 			if err != nil {
@@ -36,7 +29,6 @@ func CmdListLottery() *cobra.Command {
 		},
 	}
 
-	flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd
@@ -67,6 +59,7 @@ func CmdShowLottery() *cobra.Command {
 		},
 	}
 
+	// flags.AddPaginationFlagsToCmd(cmd, cmd.Use)
 	flags.AddQueryFlagsToCmd(cmd)
 
 	return cmd

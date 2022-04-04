@@ -167,6 +167,8 @@ func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
 func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+	ctx.Logger().With("module", fmt.Sprintf("Begin Block---x/%s", types.ModuleName))
+
 	// Block proposer who creates lottery block
 	proposer := ctx.BlockHeader().ProposerAddress
 
@@ -183,6 +185,8 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
 // returns no validator updates.
 func (am AppModule) EndBlock(ctk sdk.Context, _ abci.RequestEndBlock) []abci.ValidatorUpdate {
+	ctk.Logger().With("module", fmt.Sprintf("End Block---x/%s", types.ModuleName))
+
 	// Suggest to close lottery, here it determines the winner and payout the fees
 	am.keeper.CloseLottery(ctk)
 

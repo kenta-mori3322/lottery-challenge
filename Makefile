@@ -14,9 +14,11 @@ PROJECT_NAME = $(shell git remote get-url origin | xargs basename -s .git)
 all: install
 
 install: go.sum
+	go install -mod=readonly $(BUILD_FLAGS) ./cmd/lotteryd-manager
 	go install -mod=readonly $(BUILD_FLAGS) ./cmd/lotteryd
 
 build: go.sum clean
+	go build -mod=mod $(BUILD_FLAGS) -o build/lotteryd-manager ./cmd/lotteryd-manager
 	go build -mod=mod $(BUILD_FLAGS) -o build/lotteryd ./cmd/lotteryd
 
 build-linux:
