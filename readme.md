@@ -9,14 +9,14 @@ Once a winner is chosen, a payout is sent and the next lottery cycle begins
 
 ## Enter Lottery transaction
 ```Valid only when sender has enough funds to cover lottery fee + minimal bet
-Only 1 enter lottery transaction is valid per user per block
-Transaction Fields:
-Lottery Fee (in tokens, e.g. 5token )
-Bet Size (in tokens, e.g. 100token )
-User can only bet between 1 to 100 tokens
-User is charged the lottery fee and a minimal bet and money is saved in the lottery
+-Only 1 enter lottery transaction is valid per user per block
+-Transaction Fields:
+-Lottery Fee (in tokens, e.g. 5token )
+-Bet Size (in tokens, e.g. 100token )
+-User can only bet between 1 to 100 tokens
+-User is charged the lottery fee and a minimal bet and money is saved in the lottery
 pool
-Lottery fee is 5token , minimal bet is 1token
+-Lottery fee is 5token , minimal bet is 1token
 ```
 
 ## How to run
