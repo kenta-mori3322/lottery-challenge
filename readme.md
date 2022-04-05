@@ -1,11 +1,17 @@
 # lottery
 **lottery** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://starport.com).
 
-## Rules of the lottery
+# Rules of the lottery
 
 Anyone can enter the lottery as long as they have enough funds
 A winner is chosen if the current block has 4 or more valid enter lottery transactions
 Once a winner is chosen, a payout is sent and the next lottery cycle begins
+
+## Lottery Blocks
+```
+- a block cant contain less than 4 lottery transactions (0 is acceptable)
+- the chosen block proposer can't have any lottery transactions with itself as a sender
+```
 
 ## Enter Lottery transaction
 ```Valid only when sender has enough funds to cover lottery fee + minimal bet
@@ -18,6 +24,27 @@ Once a winner is chosen, a payout is sent and the next lottery cycle begins
 pool
 -Lottery fee is 5token , minimal bet is 1token
 ```
+
+## Choosing a winner
+```
+- Every block that contains 4 or more lottery transactions is a lottery block
+- At the end of the lottery block, hash the data of the transactions (retaining their order)
+- Take the lowest 16 bits of the resulting hash and do a modulo on the number of lottery transactions in the block to determine the winner!
+```
+
+# Environment Setup
+```
+Recommended configuration:
+
+Number of CPUs: 2
+
+Memory: 8GB
+
+OS: Ubuntu 18.04, 20.04 LTS
+
+Allow all incoming connections from TCP port 26656 and 26657
+```
+
 ## Prerequisites
 ```
 sudo apt update
