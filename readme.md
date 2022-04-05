@@ -41,6 +41,7 @@ go version
 ```
 cd lottery-challenge folder
 make install
+
 rm -r ~/.LotteryApp
 mkdir -p ~/.LotteryApp/upgrade_manager/genesis/bin
 mkdir -p ~/.LotteryApp/upgrade_manager/upgrades
@@ -69,7 +70,7 @@ lotteryd add-genesis-account $(lotteryd keys show test4 -a --keyring-backend tes
 
 lotteryd gentx validator 9000000000000stake --keyring-backend test --chain-id test
 ```
-## How to configure the service
+# How to configure the service
 sudo vim /etc/systemd/system/lotteryd.service
 ```
 [Unit]
@@ -105,14 +106,14 @@ sudo systemctl enable lotteryd
 # Start the node
 sudo systemctl start lotteryd
 
-## Collect genesis transactions
+# Collect genesis transactions
 lotteryd collect-gentxs
 
-## How to enter lottery
+# How to enter lottery
 ```
 lotteryd tx lottery enter-lottery 100token --from validator1 --chain-id test -y
 ```
-## How to query lotteries
+# How to query lotteries
 ```
 lotteryd q lottery list-lottery
 ```
