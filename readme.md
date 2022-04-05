@@ -54,3 +54,12 @@ sudo vim /etc/systemd/system/lottery.service
 
 lotteryd collect-gentxs
 ```
+## How to enter lottery
+```
+lotteryd tx lottery enter-lottery 100token --from validator1 --chain-id test -y
+```
+## How to query lotteries
+```
+lotteryd q lottery list-lottery
+```
+
