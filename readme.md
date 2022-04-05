@@ -1,7 +1,7 @@
 # lottery
 **lottery** is a blockchain built using Cosmos SDK and Tendermint and created with [Starport](https://starport.com).
 
-## Rules of the lotter
+## Rules of the lottery
 
 Anyone can enter the lottery as long as they have enough funds
 A winner is chosen if the current block has 4 or more valid enter lottery transactions
