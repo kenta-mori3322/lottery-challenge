@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/sha256"
 	"fmt"
+	"strconv"
 
 	"unsafe"
 
@@ -88,7 +89,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 
 	// Accumulate the bet amount to the current lottery
 	lottery.AccumulatedAmount.Add(amount...)
-	lottery.BetCount ++
+	lottery.BetCount++
 	// Update the store of lottery
 	k.SetLottery(ctx, lotteryID, lottery)
 
@@ -269,11 +270,26 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, betWinner.Player, lottery.AccumulatedAmount)
 	}
 
+	// is Max, has to change the open lottery status to be closed
+	if isMax {
+		for _, lot := range allLotteries {
+			// if it is closed lottery, skip
+			if lot.Status == 0 {
+				continue
+			}
+
+			// Update lottery status as closed
+			lotID, _ := strconv.ParseUint(lot.Index, 10, 64)
+			lot.Status = 0
+			k.SetLottery(ctx, lotID, lot)
+		}
+	}
+
 	return true, nil
 }
 
 //close lottery
-func (k Keeper) CloseLottery(ctx sdk.Context) (bool) {
+func (k Keeper) CloseLottery(ctx sdk.Context) bool {
 	lotteryId := k.GetLotteryCount(ctx)
 	lottery, _, err := k.GetLottery(ctx, lotteryId)
 	if err != nil {
