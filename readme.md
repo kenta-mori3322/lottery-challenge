@@ -76,6 +76,7 @@ mkdir -p ~/.LotteryApp/upgrade_manager/upgrades
 cp $(which lotteryd) ~/.LotteryApp/upgrade_manager/genesis/bin
 sudo cp $(which lotteryd-manager) /usr/bin
 
+**Initialize chain, moniker name is validator**
 lotteryd init --chain-id test validator
 
 echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | lotteryd keys add validator --keyring-backend test --recover
@@ -88,18 +89,21 @@ echo "exotic merit wrestle sad bundle age purity ability collect immense place t
 
 echo "faculty head please solid picnic benefit hurt gloom flag transfer thrive zebra" | lotteryd keys add test4 --keyring-backend test --recover
 
-
+**Add genesis accounts**
 lotteryd add-genesis-account $(lotteryd keys show validator -a --keyring-backend test) 100000000000000token,300000000000000stake
 lotteryd add-genesis-account $(lotteryd keys show test1 -a --keyring-backend test) 110000000000000token,300000000000000stake
 lotteryd add-genesis-account $(lotteryd keys show test2 -a --keyring-backend test) 120000000000000token,300000000000000stake
 lotteryd add-genesis-account $(lotteryd keys show test3 -a --keyring-backend test) 130000000000000token,300000000000000stake
 lotteryd add-genesis-account $(lotteryd keys show test4 -a --keyring-backend test) 140000000000000token,300000000000000stake
 
+**Add a genesis validator by staking "stake" tokens**
 lotteryd gentx validator 9000000000000stake --keyring-backend test --chain-id test
 
+**Collect genesis transactions**
 lotteryd collect-gentxs
 
 ```
+
 ## How to config tendermint configuration
 ```
 sudo vi ~/.LotteryApp/config/config.toml
@@ -148,9 +152,6 @@ sudo systemctl enable lotteryd
 
 ## Start the node
 sudo systemctl start lotteryd
-
-## Collect genesis transactions
-lotteryd collect-gentxs
 
 ## How to enter lottery
 ```
