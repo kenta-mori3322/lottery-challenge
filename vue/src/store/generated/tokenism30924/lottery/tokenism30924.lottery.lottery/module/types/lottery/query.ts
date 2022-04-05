@@ -2,10 +2,6 @@
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../lottery/params";
 import { Lottery } from "../lottery/lottery";
-import {
-  PageRequest,
-  PageResponse,
-} from "../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "tokenism30924.lottery.lottery";
 
@@ -26,13 +22,10 @@ export interface QueryGetLotteryResponse {
   lottery: Lottery | undefined;
 }
 
-export interface QueryAllLotteryRequest {
-  pagination: PageRequest | undefined;
-}
+export interface QueryAllLotteryRequest {}
 
 export interface QueryAllLotteryResponse {
   lottery: Lottery[];
-  pagination: PageResponse | undefined;
 }
 
 const baseQueryParamsRequest: object = {};
@@ -264,13 +257,7 @@ export const QueryGetLotteryResponse = {
 const baseQueryAllLotteryRequest: object = {};
 
 export const QueryAllLotteryRequest = {
-  encode(
-    message: QueryAllLotteryRequest,
-    writer: Writer = Writer.create()
-  ): Writer {
-    if (message.pagination !== undefined) {
-      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
-    }
+  encode(_: QueryAllLotteryRequest, writer: Writer = Writer.create()): Writer {
     return writer;
   },
 
@@ -281,9 +268,6 @@ export const QueryAllLotteryRequest = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
-          message.pagination = PageRequest.decode(reader, reader.uint32());
-          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -292,34 +276,18 @@ export const QueryAllLotteryRequest = {
     return message;
   },
 
-  fromJSON(object: any): QueryAllLotteryRequest {
+  fromJSON(_: any): QueryAllLotteryRequest {
     const message = { ...baseQueryAllLotteryRequest } as QueryAllLotteryRequest;
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageRequest.fromJSON(object.pagination);
-    } else {
-      message.pagination = undefined;
-    }
     return message;
   },
 
-  toJSON(message: QueryAllLotteryRequest): unknown {
+  toJSON(_: QueryAllLotteryRequest): unknown {
     const obj: any = {};
-    message.pagination !== undefined &&
-      (obj.pagination = message.pagination
-        ? PageRequest.toJSON(message.pagination)
-        : undefined);
     return obj;
   },
 
-  fromPartial(
-    object: DeepPartial<QueryAllLotteryRequest>
-  ): QueryAllLotteryRequest {
+  fromPartial(_: DeepPartial<QueryAllLotteryRequest>): QueryAllLotteryRequest {
     const message = { ...baseQueryAllLotteryRequest } as QueryAllLotteryRequest;
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageRequest.fromPartial(object.pagination);
-    } else {
-      message.pagination = undefined;
-    }
     return message;
   },
 };
@@ -333,12 +301,6 @@ export const QueryAllLotteryResponse = {
   ): Writer {
     for (const v of message.lottery) {
       Lottery.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.pagination !== undefined) {
-      PageResponse.encode(
-        message.pagination,
-        writer.uint32(18).fork()
-      ).ldelim();
     }
     return writer;
   },
@@ -355,9 +317,6 @@ export const QueryAllLotteryResponse = {
       switch (tag >>> 3) {
         case 1:
           message.lottery.push(Lottery.decode(reader, reader.uint32()));
-          break;
-        case 2:
-          message.pagination = PageResponse.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -377,11 +336,6 @@ export const QueryAllLotteryResponse = {
         message.lottery.push(Lottery.fromJSON(e));
       }
     }
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageResponse.fromJSON(object.pagination);
-    } else {
-      message.pagination = undefined;
-    }
     return message;
   },
 
@@ -394,10 +348,6 @@ export const QueryAllLotteryResponse = {
     } else {
       obj.lottery = [];
     }
-    message.pagination !== undefined &&
-      (obj.pagination = message.pagination
-        ? PageResponse.toJSON(message.pagination)
-        : undefined);
     return obj;
   },
 
@@ -412,11 +362,6 @@ export const QueryAllLotteryResponse = {
       for (const e of object.lottery) {
         message.lottery.push(Lottery.fromPartial(e));
       }
-    }
-    if (object.pagination !== undefined && object.pagination !== null) {
-      message.pagination = PageResponse.fromPartial(object.pagination);
-    } else {
-      message.pagination = undefined;
     }
     return message;
   },

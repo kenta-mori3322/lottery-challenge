@@ -83,9 +83,9 @@ func (k Keeper) GetNextBetCount(ctx sdk.Context) uint64 {
 // GetNextLotteryCount increments and returns the current number of lotteries.
 // If the global lottery count is not set, it initializes it with value 0.
 func (k Keeper) GetNextLotteryCount(ctx sdk.Context) uint64 {
-	betCount := k.GetBetCount(ctx)
+	lotteryCount := k.GetLotteryCount(ctx)
 	store := ctx.KVStore(k.storeKey)
-	bz := sdk.Uint64ToBigEndian(betCount + 1)
+	bz := sdk.Uint64ToBigEndian(lotteryCount + 1)
 	store.Set(types.LotteryCountStoreKey, bz)
-	return betCount + 1
+	return lotteryCount + 1
 }

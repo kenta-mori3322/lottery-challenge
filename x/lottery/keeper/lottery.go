@@ -88,7 +88,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 
 	// Accumulate the bet amount to the current lottery
 	lottery.AccumulatedAmount.Add(amount...)
-
+	lottery.BetCount ++
 	// Update the store of lottery
 	k.SetLottery(ctx, lotteryID, lottery)
 

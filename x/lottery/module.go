@@ -180,7 +180,7 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 
 	// logs
 	sLotID := fmt.Sprintf("%d", lotID)
-	fmt.Println("A new lottery ", sLotID ,"block created")
+	fmt.Println("A new lottery", sLotID ,"block created")
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
