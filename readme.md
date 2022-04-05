@@ -69,8 +69,24 @@ lotteryd add-genesis-account $(lotteryd keys show test3 -a --keyring-backend tes
 lotteryd add-genesis-account $(lotteryd keys show test4 -a --keyring-backend test) 140000000000000token,300000000000000stake
 
 lotteryd gentx validator 9000000000000stake --keyring-backend test --chain-id test
+
+lotteryd collect-gentxs
+
 ```
-# How to configure the service
+## How to config tendermint configuration
+```
+sudo vi ~/.LotteryApp/config/config.toml
+
+**RPC server configuration option**
+timeout_broadcast_tx_commit="300s"
+
+**Consensus configuration option**
+timeout_commit="300s"
+create_empty_block_interval="300s"
+
+```
+
+## How to configure the service
 sudo vim /etc/systemd/system/lotteryd.service
 ```
 [Unit]
@@ -100,21 +116,22 @@ WantedBy=multi-user.target
 ```
 Should confirm if the user & group names are matched.
 
-# Enable the lotteryd service
+## Enable the lotteryd service
 sudo systemctl enable lotteryd
 
-# Start the node
+## Start the node
 sudo systemctl start lotteryd
 
-# Collect genesis transactions
+## Collect genesis transactions
 lotteryd collect-gentxs
 
-# How to enter lottery
+## How to enter lottery
 ```
 lotteryd tx lottery enter-lottery 100token --from validator1 --chain-id test -y
 ```
-# How to query lotteries
+## How to query lotteries
 ```
 lotteryd q lottery list-lottery
 ```
-
+## Obstacles
+Currently, the above tendermint configuration doens't allow blockchain to generate any block. I should make them less than 5s in oder to generate blocks. But in the assignment, it is mentioned to generate lottery block every 5 mins. Among those that have more than 4 enter-lottery transactions are considered as valid lottery block.
