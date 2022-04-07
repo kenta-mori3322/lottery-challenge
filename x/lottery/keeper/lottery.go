@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"strconv"
+	"time"
 
 	"unsafe"
 
@@ -122,6 +123,9 @@ func (k Keeper) CreateLottery(ctx sdk.Context, proposer sdk.AccAddress, status u
 	// Store the created lottery
 	k.SetLottery(ctx, lotteryID, newLottery)
 
+	// Store the latest lottery created time
+	k.SetlastLotteryBlockCreationTime(ctx, time.Now())
+
 	return lotteryID, nil
 }
 
@@ -141,6 +145,25 @@ func (k Keeper) GetLottery(ctx sdk.Context, id uint64) (types.Lottery, bool, err
 	var lottery types.Lottery
 	k.cdc.MustUnmarshal(bz, &lottery)
 	return lottery, true, nil
+}
+
+// Get current lottery
+func (k Keeper) GetCurrentLottery(ctx sdk.Context) (bool, types.Lottery) {
+	// Get current lottery id
+	lotteryID := k.GetLotteryCount(ctx)
+
+	// If there isn't any lottery created
+	if lotteryID == 0 {
+		return false, types.Lottery{}
+	}
+
+	// Get current lottery
+	lottery, _, err := k.GetLottery(ctx, lotteryID)
+	if err != nil {
+		return false, types.Lottery{}
+	}
+
+	return true, lottery
 }
 
 // Get an iterator over all bets

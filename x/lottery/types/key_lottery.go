@@ -31,6 +31,9 @@ var (
 
 	// BetStoreKeyPrefix is a prefix for storing bet
 	BetStoreKeyPrefix = []byte{0x03}
+
+	// Timestamp for the last lottery created.
+	LastLotteryCreationTime = []byte{0x04}
 )
 
 // ChannelStoreKey is a function to generate key for each verified channel in store

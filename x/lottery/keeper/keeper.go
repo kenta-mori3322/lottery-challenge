@@ -3,6 +3,7 @@ package keeper
 import (
 	"encoding/binary"
 	"fmt"
+	"time"
 
 	"github.com/tendermint/tendermint/libs/log"
 
@@ -88,4 +89,28 @@ func (k Keeper) GetNextLotteryCount(ctx sdk.Context) uint64 {
 	bz := sdk.Uint64ToBigEndian(lotteryCount + 1)
 	store.Set(types.LotteryCountStoreKey, bz)
 	return lotteryCount + 1
+}
+
+// Save the last lottery block creation time.
+func (k Keeper) SetlastLotteryBlockCreationTime(ctx sdk.Context, tick time.Time) bool {
+	store := ctx.KVStore(k.storeKey)
+	bz := sdk.FormatTimeBytes(tick)
+	store.Set(types.LastLotteryCreationTime, bz)
+	return true
+}
+
+// Get the last lottery block creation time.
+func (k Keeper) GetlastLotteryBlockCreationTime(ctx sdk.Context) time.Time {
+	store := ctx.KVStore(k.storeKey)
+	bz := store.Get(types.LastLotteryCreationTime)
+	if bz == nil {
+		return time.Now()
+	}
+
+	t, err := sdk.ParseTimeBytes(bz)
+	if err != nil {
+		return time.Now()
+	}
+
+	return t
 }

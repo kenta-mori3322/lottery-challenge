@@ -175,12 +175,25 @@ func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
 	// At first it is zero amount acculated in the lottery
 	zeroAmount := sdk.Coins{sdk.NewInt64Coin("token", 0)}
 
-	// Create a new lottery block each time is going to create a new tendermint block
-	lotID, _ := am.keeper.CreateLottery(ctx, proposer, uint64(1), zeroAmount)
+	lastCreationTime := am.keeper.GetlastLotteryBlockCreationTime(ctx)
+	duration := ctx.BlockTime().Sub(lastCreationTime)
+	duration_second := duration.Seconds()
 
-	// logs
-	sLotID := fmt.Sprintf("%d", lotID)
-	fmt.Println("A new lottery", sLotID ,"block created")
+	// get current lottery
+	succeed, currentLottery := am.keeper.GetCurrentLottery(ctx)
+
+	// if the current lottery has more than 4 enter-lottery transacion
+	// or it is more than 5 mins passed
+	// or we don't have any lottery
+	// then we create a new lottery
+	if !succeed || currentLottery.BetCount >= 4 || duration_second >= 5*60 {
+		// Create a new lottery block
+		lotID, _ := am.keeper.CreateLottery(ctx, proposer, uint64(1), zeroAmount)
+
+		// logs
+		sLotID := fmt.Sprintf("%d", lotID)
+		fmt.Println("A new lottery", sLotID, "block created")
+	}
 }
 
 // EndBlock executes all ABCI EndBlock logic respective to the capability module. It
