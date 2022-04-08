@@ -53,7 +53,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	}
 
 	// if the lottery proposer tries to bet, then stop him doing it
-	if bytes.Compare(lottery.Proposer, playerAddr) == 0 {
+	if !bytes.Equal(lottery.Proposer, playerAddr) {
 		return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "Sorry, lottery %d is created by you, so you are prohibited to bet", lotteryID)
 	}
 
@@ -236,7 +236,9 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	nSmallCount := 0
 
 	// bet amount for the winner
-	amount := bets[winner_index].Amount.AmountOf("token")
+	// amount := bets[winner_index].Amount.AmountOf("token")
+	amount := bets[0].Amount.AmountOf("token")
+
 	for i, bet := range bets {
 		// skip the winner index
 		if i == int(winner_index) {
@@ -252,6 +254,10 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		if amount.LT(bet.Amount.AmountOf("token")) {
 			nSmallCount++
 		}
+	}
+
+	if winner_index > 0 {
+		return false, nil
 	}
 
 	// varialbles for max, min

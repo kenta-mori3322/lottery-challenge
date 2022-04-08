@@ -166,11 +166,12 @@ func (am AppModule) ExportGenesis(ctx sdk.Context, cdc codec.JSONCodec) json.Raw
 func (AppModule) ConsensusVersion() uint64 { return 2 }
 
 // BeginBlock executes all ABCI BeginBlock logic respective to the capability module.
-func (am AppModule) BeginBlock(ctx sdk.Context, _ abci.RequestBeginBlock) {
+func (am AppModule) BeginBlock(ctx sdk.Context, a abci.RequestBeginBlock) {
 	ctx.Logger().With("module", fmt.Sprintf("Begin Block---x/%s", types.ModuleName))
 
 	// Block proposer who creates lottery block
-	proposer := ctx.BlockHeader().ProposerAddress
+	// proposer := ctx.BlockHeader().ProposerAddress
+	proposer := a.GetHeader().ProposerAddress
 
 	// At first it is zero amount acculated in the lottery
 	zeroAmount := sdk.Coins{sdk.NewInt64Coin("token", 0)}

@@ -129,34 +129,4 @@ func TestListLottery(t *testing.T) {
 			)
 		}
 	})
-	t.Run("ByKey", func(t *testing.T) {
-		step := 2
-		var next []byte
-		for i := 0; i < len(objs); i += step {
-			args := request(next, 0, uint64(step), false)
-			out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLottery(), args)
-			require.NoError(t, err)
-			var resp types.QueryAllLotteryResponse
-			require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-			require.LessOrEqual(t, len(resp.Lottery), step)
-			require.Subset(t,
-				nullify.Fill(objs),
-				nullify.Fill(resp.Lottery),
-			)
-			next = resp.Pagination.NextKey
-		}
-	})
-	t.Run("Total", func(t *testing.T) {
-		args := request(nil, 0, uint64(len(objs)), true)
-		out, err := clitestutil.ExecTestCLICmd(ctx, cli.CmdListLottery(), args)
-		require.NoError(t, err)
-		var resp types.QueryAllLotteryResponse
-		require.NoError(t, net.Config.Codec.UnmarshalJSON(out.Bytes(), &resp))
-		require.NoError(t, err)
-		require.Equal(t, len(objs), int(resp.Pagination.Total))
-		require.ElementsMatch(t,
-			nullify.Fill(objs),
-			nullify.Fill(resp.Lottery),
-		)
-	})
 }
