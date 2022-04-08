@@ -2,6 +2,8 @@
 import { Reader, Writer } from "protobufjs/minimal";
 import { Params } from "../lottery/params";
 import { Lottery } from "../lottery/lottery";
+import { BetData } from "../lottery/bet_data";
+import { PageRequest } from "../cosmos/base/query/v1beta1/pagination";
 
 export const protobufPackage = "tokenism30924.lottery.lottery";
 
@@ -26,6 +28,22 @@ export interface QueryAllLotteryRequest {}
 
 export interface QueryAllLotteryResponse {
   lottery: Lottery[];
+}
+
+export interface QueryGetBetDataRequest {
+  index: string;
+}
+
+export interface QueryGetBetDataResponse {
+  betData: BetData | undefined;
+}
+
+export interface QueryAllBetDataRequest {
+  pagination: PageRequest | undefined;
+}
+
+export interface QueryAllBetDataResponse {
+  betData: BetData[];
 }
 
 const baseQueryParamsRequest: object = {};
@@ -367,6 +385,273 @@ export const QueryAllLotteryResponse = {
   },
 };
 
+const baseQueryGetBetDataRequest: object = { index: "" };
+
+export const QueryGetBetDataRequest = {
+  encode(
+    message: QueryGetBetDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.index !== "") {
+      writer.uint32(10).string(message.index);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetBetDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryGetBetDataRequest } as QueryGetBetDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.index = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetBetDataRequest {
+    const message = { ...baseQueryGetBetDataRequest } as QueryGetBetDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = String(object.index);
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetBetDataRequest): unknown {
+    const obj: any = {};
+    message.index !== undefined && (obj.index = message.index);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetBetDataRequest>
+  ): QueryGetBetDataRequest {
+    const message = { ...baseQueryGetBetDataRequest } as QueryGetBetDataRequest;
+    if (object.index !== undefined && object.index !== null) {
+      message.index = object.index;
+    } else {
+      message.index = "";
+    }
+    return message;
+  },
+};
+
+const baseQueryGetBetDataResponse: object = {};
+
+export const QueryGetBetDataResponse = {
+  encode(
+    message: QueryGetBetDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.betData !== undefined) {
+      BetData.encode(message.betData, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryGetBetDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryGetBetDataResponse,
+    } as QueryGetBetDataResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.betData = BetData.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryGetBetDataResponse {
+    const message = {
+      ...baseQueryGetBetDataResponse,
+    } as QueryGetBetDataResponse;
+    if (object.betData !== undefined && object.betData !== null) {
+      message.betData = BetData.fromJSON(object.betData);
+    } else {
+      message.betData = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryGetBetDataResponse): unknown {
+    const obj: any = {};
+    message.betData !== undefined &&
+      (obj.betData = message.betData
+        ? BetData.toJSON(message.betData)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryGetBetDataResponse>
+  ): QueryGetBetDataResponse {
+    const message = {
+      ...baseQueryGetBetDataResponse,
+    } as QueryGetBetDataResponse;
+    if (object.betData !== undefined && object.betData !== null) {
+      message.betData = BetData.fromPartial(object.betData);
+    } else {
+      message.betData = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllBetDataRequest: object = {};
+
+export const QueryAllBetDataRequest = {
+  encode(
+    message: QueryAllBetDataRequest,
+    writer: Writer = Writer.create()
+  ): Writer {
+    if (message.pagination !== undefined) {
+      PageRequest.encode(message.pagination, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllBetDataRequest {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseQueryAllBetDataRequest } as QueryAllBetDataRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.pagination = PageRequest.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllBetDataRequest {
+    const message = { ...baseQueryAllBetDataRequest } as QueryAllBetDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromJSON(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllBetDataRequest): unknown {
+    const obj: any = {};
+    message.pagination !== undefined &&
+      (obj.pagination = message.pagination
+        ? PageRequest.toJSON(message.pagination)
+        : undefined);
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllBetDataRequest>
+  ): QueryAllBetDataRequest {
+    const message = { ...baseQueryAllBetDataRequest } as QueryAllBetDataRequest;
+    if (object.pagination !== undefined && object.pagination !== null) {
+      message.pagination = PageRequest.fromPartial(object.pagination);
+    } else {
+      message.pagination = undefined;
+    }
+    return message;
+  },
+};
+
+const baseQueryAllBetDataResponse: object = {};
+
+export const QueryAllBetDataResponse = {
+  encode(
+    message: QueryAllBetDataResponse,
+    writer: Writer = Writer.create()
+  ): Writer {
+    for (const v of message.betData) {
+      BetData.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): QueryAllBetDataResponse {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = {
+      ...baseQueryAllBetDataResponse,
+    } as QueryAllBetDataResponse;
+    message.betData = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.betData.push(BetData.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): QueryAllBetDataResponse {
+    const message = {
+      ...baseQueryAllBetDataResponse,
+    } as QueryAllBetDataResponse;
+    message.betData = [];
+    if (object.betData !== undefined && object.betData !== null) {
+      for (const e of object.betData) {
+        message.betData.push(BetData.fromJSON(e));
+      }
+    }
+    return message;
+  },
+
+  toJSON(message: QueryAllBetDataResponse): unknown {
+    const obj: any = {};
+    if (message.betData) {
+      obj.betData = message.betData.map((e) =>
+        e ? BetData.toJSON(e) : undefined
+      );
+    } else {
+      obj.betData = [];
+    }
+    return obj;
+  },
+
+  fromPartial(
+    object: DeepPartial<QueryAllBetDataResponse>
+  ): QueryAllBetDataResponse {
+    const message = {
+      ...baseQueryAllBetDataResponse,
+    } as QueryAllBetDataResponse;
+    message.betData = [];
+    if (object.betData !== undefined && object.betData !== null) {
+      for (const e of object.betData) {
+        message.betData.push(BetData.fromPartial(e));
+      }
+    }
+    return message;
+  },
+};
+
 /** Query defines the gRPC querier service. */
 export interface Query {
   /** Parameters queries the parameters of the module. */
@@ -375,6 +660,10 @@ export interface Query {
   Lottery(request: QueryGetLotteryRequest): Promise<QueryGetLotteryResponse>;
   /** Queries a list of Lottery items. */
   LotteryAll(request: QueryAllLotteryRequest): Promise<QueryAllLotteryResponse>;
+  /** Queries a BetData by index. */
+  BetData(request: QueryGetBetDataRequest): Promise<QueryGetBetDataResponse>;
+  /** Queries a list of BetData items. */
+  BetDataAll(request: QueryAllBetDataRequest): Promise<QueryAllBetDataResponse>;
 }
 
 export class QueryClientImpl implements Query {
@@ -415,6 +704,32 @@ export class QueryClientImpl implements Query {
     );
     return promise.then((data) =>
       QueryAllLotteryResponse.decode(new Reader(data))
+    );
+  }
+
+  BetData(request: QueryGetBetDataRequest): Promise<QueryGetBetDataResponse> {
+    const data = QueryGetBetDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "tokenism30924.lottery.lottery.Query",
+      "BetData",
+      data
+    );
+    return promise.then((data) =>
+      QueryGetBetDataResponse.decode(new Reader(data))
+    );
+  }
+
+  BetDataAll(
+    request: QueryAllBetDataRequest
+  ): Promise<QueryAllBetDataResponse> {
+    const data = QueryAllBetDataRequest.encode(request).finish();
+    const promise = this.rpc.request(
+      "tokenism30924.lottery.lottery.Query",
+      "BetDataAll",
+      data
+    );
+    return promise.then((data) =>
+      QueryAllBetDataResponse.decode(new Reader(data))
     );
   }
 }

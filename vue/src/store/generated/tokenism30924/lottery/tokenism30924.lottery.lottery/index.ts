@@ -1,11 +1,12 @@
 import { txClient, queryClient, MissingWalletError , registry} from './module'
 
 import { Bet } from "./module/types/lottery/bet"
+import { BetData } from "./module/types/lottery/bet_data"
 import { Lottery } from "./module/types/lottery/lottery"
 import { Params } from "./module/types/lottery/params"
 
 
-export { Bet, Lottery, Params };
+export { Bet, BetData, Lottery, Params };
 
 async function initTxClient(vuexGetters) {
 	return await txClient(vuexGetters['common/wallet/signer'], {
@@ -46,9 +47,12 @@ const getDefaultState = () => {
 				Params: {},
 				Lottery: {},
 				LotteryAll: {},
+				BetData: {},
+				BetDataAll: {},
 				
 				_Structure: {
 						Bet: getStructure(Bet.fromPartial({})),
+						BetData: getStructure(BetData.fromPartial({})),
 						Lottery: getStructure(Lottery.fromPartial({})),
 						Params: getStructure(Params.fromPartial({})),
 						
@@ -96,6 +100,18 @@ export default {
 						(<any> params).query=null
 					}
 			return state.LotteryAll[JSON.stringify(params)] ?? {}
+		},
+				getBetData: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.BetData[JSON.stringify(params)] ?? {}
+		},
+				getBetDataAll: (state) => (params = { params: {}}) => {
+					if (!(<any> params).query) {
+						(<any> params).query=null
+					}
+			return state.BetDataAll[JSON.stringify(params)] ?? {}
 		},
 				
 		getTypeStructure: (state) => (type) => {
@@ -192,6 +208,54 @@ export default {
 				return getters['getLotteryAll']( { params: {...key}, query}) ?? {}
 			} catch (e) {
 				throw new Error('QueryClient:QueryLotteryAll API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryBetData({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryBetData( key.index)).data
+				
+					
+				commit('QUERY', { query: 'BetData', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBetData', payload: { options: { all }, params: {...key},query }})
+				return getters['getBetData']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryBetData API Node Unavailable. Could not perform query: ' + e.message)
+				
+			}
+		},
+		
+		
+		
+		
+		 		
+		
+		
+		async QueryBetDataAll({ commit, rootGetters, getters }, { options: { subscribe, all} = { subscribe:false, all:false}, params, query=null }) {
+			try {
+				const key = params ?? {};
+				const queryClient=await initQueryClient(rootGetters)
+				let value= (await queryClient.queryBetDataAll(query)).data
+				
+					
+				while (all && (<any> value).pagination && (<any> value).pagination.next_key!=null) {
+					let next_values=(await queryClient.queryBetDataAll({...query, 'pagination.key':(<any> value).pagination.next_key})).data
+					value = mergeResults(value, next_values);
+				}
+				commit('QUERY', { query: 'BetDataAll', key: { params: {...key}, query}, value })
+				if (subscribe) commit('SUBSCRIBE', { action: 'QueryBetDataAll', payload: { options: { all }, params: {...key},query }})
+				return getters['getBetDataAll']( { params: {...key}, query}) ?? {}
+			} catch (e) {
+				throw new Error('QueryClient:QueryBetDataAll API Node Unavailable. Could not perform query: ' + e.message)
 				
 			}
 		},

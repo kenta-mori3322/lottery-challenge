@@ -31,7 +31,7 @@ func TestGenesisState_Validate(t *testing.T) {
 					},
 				},
 
-				BetList: []types.Bet{
+				BetDataList: []types.BetData{
 					{
 						Index: "0",
 					},
@@ -57,11 +57,10 @@ func TestGenesisState_Validate(t *testing.T) {
 			},
 			valid: false,
 		},
-
 		{
-			desc: "duplicated bet",
+			desc: "duplicated betData",
 			genState: &types.GenesisState{
-				BetList: []types.Bet{
+				BetDataList: []types.BetData{
 					{
 						Index: "0",
 					},

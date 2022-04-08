@@ -80,7 +80,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	betID := k.GetNextBetCount(ctx)
 
 	// Create a new instance of Bet
-	newBet := types.Bet{
+	newBet := types.BetData{
 		Index:     fmt.Sprintf("%d", betID),
 		Name:      playerName,
 		Player:    playerAddr,

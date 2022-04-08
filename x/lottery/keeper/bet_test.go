@@ -15,8 +15,8 @@ import (
 // Prevent strconv unused error
 var _ = strconv.IntSize
 
-func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.Bet {
-	items := make([]types.Bet, n)
+func createNBet(keeper *keeper.Keeper, ctx sdk.Context, n int) []types.BetData {
+	items := make([]types.BetData, n)
 	for i := range items {
 		items[i].Index = strconv.Itoa(i)
 

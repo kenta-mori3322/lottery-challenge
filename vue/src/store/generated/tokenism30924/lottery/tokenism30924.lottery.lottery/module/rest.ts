@@ -9,6 +9,23 @@
  * ---------------------------------------------------------------
  */
 
+export interface LotteryBetData {
+  index?: string;
+
+  /** @format uint64 */
+  lotteryId?: string;
+  name?: string;
+
+  /** @format byte */
+  player?: string;
+
+  /**
+   * @format sdk.Coins
+   * @example [{"denom":"token","amount":"100000000"}]
+   */
+  amount?: V1Beta1Coin[];
+}
+
 export interface LotteryLottery {
   index?: string;
 
@@ -51,8 +68,16 @@ export interface LotteryMsgEnterLotteryResponse {
  */
 export type LotteryParams = object;
 
+export interface LotteryQueryAllBetDataResponse {
+  betData?: LotteryBetData[];
+}
+
 export interface LotteryQueryAllLotteryResponse {
   lottery?: LotteryLottery[];
+}
+
+export interface LotteryQueryGetBetDataResponse {
+  betData?: LotteryBetData;
 }
 
 export interface LotteryQueryGetLotteryResponse {
@@ -87,6 +112,52 @@ signatures required by gogoproto.
 export interface V1Beta1Coin {
   denom?: string;
   amount?: string;
+}
+
+/**
+* message SomeRequest {
+         Foo some_parameter = 1;
+         PageRequest pagination = 2;
+ }
+*/
+export interface V1Beta1PageRequest {
+  /**
+   * key is a value returned in PageResponse.next_key to begin
+   * querying the next page most efficiently. Only one of offset or key
+   * should be set.
+   * @format byte
+   */
+  key?: string;
+
+  /**
+   * offset is a numeric offset that can be used when key is unavailable.
+   * It is less efficient than using key. Only one of offset or key should
+   * be set.
+   * @format uint64
+   */
+  offset?: string;
+
+  /**
+   * limit is the total number of results to be returned in the result page.
+   * If left empty it will default to a value to be set by each app.
+   * @format uint64
+   */
+  limit?: string;
+
+  /**
+   * count_total is set to true  to indicate that the result set should include
+   * a count of the total number of items available for pagination in UIs.
+   * count_total is only respected when offset is used. It is ignored when key
+   * is set.
+   */
+  count_total?: boolean;
+
+  /**
+   * reverse is set to true if results are to be returned in the descending order.
+   *
+   * Since: cosmos-sdk 0.43
+   */
+  reverse?: boolean;
 }
 
 export type QueryParamsType = Record<string | number, any>;
@@ -285,6 +356,48 @@ export class HttpClient<SecurityDataType = unknown> {
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryBetDataAll
+   * @summary Queries a list of BetData items.
+   * @request GET:/tokenism30924/lottery/lottery/bet_data
+   */
+  queryBetDataAll = (
+    query?: {
+      "pagination.key"?: string;
+      "pagination.offset"?: string;
+      "pagination.limit"?: string;
+      "pagination.count_total"?: boolean;
+      "pagination.reverse"?: boolean;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<LotteryQueryAllBetDataResponse, RpcStatus>({
+      path: `/tokenism30924/lottery/lottery/bet_data`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+
+  /**
+   * No description
+   *
+   * @tags Query
+   * @name QueryBetData
+   * @summary Queries a BetData by index.
+   * @request GET:/tokenism30924/lottery/lottery/bet_data/{index}
+   */
+  queryBetData = (index: string, params: RequestParams = {}) =>
+    this.request<LotteryQueryGetBetDataResponse, RpcStatus>({
+      path: `/tokenism30924/lottery/lottery/bet_data/${index}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+
   /**
    * No description
    *

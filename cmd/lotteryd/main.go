@@ -4,8 +4,8 @@ import (
 	"os"
 
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
-	"github.com/tokenism30924/lottery/cmd/lotteryd/cmd"
 	"github.com/tokenism30924/lottery/app"
+	"github.com/tokenism30924/lottery/cmd/lotteryd/cmd"
 )
 
 func main() {

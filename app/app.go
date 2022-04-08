@@ -87,7 +87,6 @@ import (
 	tmos "github.com/tendermint/tendermint/libs/os"
 	dbm "github.com/tendermint/tm-db"
 
-	
 	customgov "github.com/tokenism30924/lottery/custom/gov"
 	customparams "github.com/tokenism30924/lottery/custom/params"
 	customupgrade "github.com/tokenism30924/lottery/custom/upgrade"
@@ -419,7 +418,7 @@ func New(
 	app.mm.SetOrderBeginBlockers(
 		upgradetypes.ModuleName, capabilitytypes.ModuleName, minttypes.ModuleName, distrtypes.ModuleName, slashingtypes.ModuleName,
 		evidencetypes.ModuleName, stakingtypes.ModuleName, ibchost.ModuleName,
-		feegrant.ModuleName,lotterymoduletypes.ModuleName,
+		feegrant.ModuleName, lotterymoduletypes.ModuleName,
 	)
 
 	app.mm.SetOrderEndBlockers(crisistypes.ModuleName, govtypes.ModuleName, stakingtypes.ModuleName, lotterymoduletypes.ModuleName)

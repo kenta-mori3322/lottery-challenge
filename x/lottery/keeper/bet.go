@@ -9,7 +9,7 @@ import (
 )
 
 // SetBet saves the given Bet to the open lottery to the store without performing any validation.
-func (k Keeper) SetBet(ctx sdk.Context, id uint64, bet types.Bet) {
+func (k Keeper) SetBet(ctx sdk.Context, id uint64, bet types.BetData) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(types.BetStoreKey(id), k.cdc.MustMarshal(&bet))
 }
@@ -19,7 +19,7 @@ func (k Keeper) GetBet(
 	ctx sdk.Context,
 	index string,
 
-) (val types.Bet, found bool) {
+) (val types.BetData, found bool) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(string(types.BetStoreKeyPrefix)))
 
 	n, _ := strconv.ParseUint(index, 10, 64)
@@ -48,17 +48,18 @@ func (k Keeper) RemoveBet(
 }
 
 // GetAllBet returns all bet
-func (k Keeper) GetAllBet(ctx sdk.Context) (list []types.Bet) {
+func (k Keeper) GetAllBet(ctx sdk.Context) (list []types.BetData) {
 	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.KeyPrefix(string(types.BetStoreKeyPrefix)))
 	iterator := sdk.KVStorePrefixIterator(store, []byte{})
+	// iterator := store.Iterator(nil, nil)
 
 	defer iterator.Close()
 
 	for ; iterator.Valid(); iterator.Next() {
-		var val types.Bet
+		var val types.BetData
 		k.cdc.MustUnmarshal(iterator.Value(), &val)
 		list = append(list, val)
 	}
 
-	return
+	return list
 }

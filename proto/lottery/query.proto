@@ -8,6 +8,7 @@ import "lottery/params.proto";
 import "lottery/lottery.proto";
 
 import "lottery/bet.proto";
+import "lottery/bet_data.proto";
 // this line is used by starport scaffolding # 1
 
 option go_package = "github.com/tokenism30924/lottery/x/lottery/types";
@@ -26,6 +27,16 @@ service Query {
 	// Queries a list of Lottery items.
 	rpc LotteryAll(QueryAllLotteryRequest) returns (QueryAllLotteryResponse) {
 		option (google.api.http).get = "/tokenism30924/lottery/lottery/lottery";
+	}
+
+// Queries a BetData by index.
+	rpc BetData(QueryGetBetDataRequest) returns (QueryGetBetDataResponse) {
+		option (google.api.http).get = "/tokenism30924/lottery/lottery/bet_data/{index}";
+	}
+
+	// Queries a list of BetData items.
+	rpc BetDataAll(QueryAllBetDataRequest) returns (QueryAllBetDataResponse) {
+		option (google.api.http).get = "/tokenism30924/lottery/lottery/bet_data";
 	}
 
 // this line is used by starport scaffolding # 2
@@ -54,6 +65,23 @@ message QueryAllLotteryRequest {
 
 message QueryAllLotteryResponse {
 	repeated Lottery lottery = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryGetBetDataRequest {
+	  string index = 1;
+
+}
+
+message QueryGetBetDataResponse {
+	BetData betData = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllBetDataRequest {
+	cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllBetDataResponse {
+	repeated BetData betData = 1 [(gogoproto.nullable) = false];
 }
 
 // this line is used by starport scaffolding # 3
