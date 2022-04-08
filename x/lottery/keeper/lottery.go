@@ -53,7 +53,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	}
 
 	// if the lottery proposer tries to bet, then stop him doing it
-	if !bytes.Equal(lottery.Proposer, playerAddr) {
+	if bytes.Equal(lottery.Proposer, playerAddr) {
 		return 0, sdkerrors.Wrapf(sdkerrors.ErrLogic, "Sorry, lottery %d is created by you, so you are prohibited to bet", lotteryID)
 	}
 
@@ -62,7 +62,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 
 	// Iterate all bets
 	for ; iterator.Valid(); iterator.Next() {
-		var bet types.Bet
+		var bet types.BetData
 		k.cdc.MustUnmarshal(iterator.Value(), &bet)
 
 		// skip bet that is not on the current lottery
@@ -89,7 +89,7 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 	}
 
 	// Accumulate the bet amount to the current lottery
-	lottery.AccumulatedAmount.Add(amount...)
+	lottery.AccumulatedAmount = lottery.AccumulatedAmount.Add(amount...)
 	lottery.BetCount++
 	// Update the store of lottery
 	k.SetLottery(ctx, lotteryID, lottery)
