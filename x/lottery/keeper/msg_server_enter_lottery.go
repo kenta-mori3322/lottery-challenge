@@ -41,10 +41,11 @@ func (k msgServer) EnterLottery(goCtx context.Context, msg *types.MsgEnterLotter
 	balancePlayer := k.bankKeeper.GetBalance(ctx, player, "token")
 
 	// Calculate necessary fee for entering lotterying transaction
-	fee := betAmount.AmountOf("token").Add(lotteryFee.AmountOf("token"))
+	// fee := betAmount.AmountOf("token").Add(lotteryFee.AmountOf("token"))
+	fee := betAmount.Add(lotteryFee...)
 
 	// check if the palyer has engough fund for betting
-	if balancePlayer.Amount.LT(fee) {
+	if balancePlayer.Amount.LT(fee.AmountOf("token")) {
 		return nil, sdkerrors.Wrap(sdkerrors.ErrInsufficientFunds, "Player doens't have enough balance")
 	}
 
@@ -53,7 +54,7 @@ func (k msgServer) EnterLottery(goCtx context.Context, msg *types.MsgEnterLotter
 
 	if err == nil {
 		// send tokens from the buyer's account to the module's account (as a payment for the name)
-		k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, betAmount.Add(lotteryFee...))
+		k.bankKeeper.SendCoinsFromAccountToModule(ctx, player, types.ModuleName, fee)
 		return &types.MsgEnterLotteryResponse{Code: "200", Msg: "Successfully bet on current lottery"}, nil
 	}
 

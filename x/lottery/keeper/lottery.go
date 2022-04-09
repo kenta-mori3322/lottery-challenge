@@ -170,7 +170,7 @@ func (k Keeper) GetCurrentLottery(ctx sdk.Context) (bool, types.Lottery) {
 func (k Keeper) GetBetsIterator(ctx sdk.Context) sdk.Iterator {
 	store := ctx.KVStore(k.storeKey)
 	betStore := prefix.NewStore(store, types.BetStoreKeyPrefix)
-	// return sdk.KVStorePrefixIterator(store, []byte{})
+	// return sdk.KVStorePrefixIterator(store, types.BetStoreKeyPrefix)
 
 	return betStore.Iterator(nil, nil)
 }
@@ -194,7 +194,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	}
 
 	// Bet array for current lottery block
-	bets := make([]types.Bet, 1)
+	bets := make([]types.BetData, 0)
 
 	// Gets iterator for bets
 	iterator := k.GetBetsIterator(ctx)
@@ -204,7 +204,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 
 	// Iterate bets
 	for ; iterator.Valid(); iterator.Next() {
-		var bet types.Bet
+		var bet types.BetData
 		k.cdc.MustUnmarshal(iterator.Value(), &bet)
 
 		// Ignore bets that are not belong to current lottery
@@ -235,9 +235,11 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	nBigCount := 0
 	nSmallCount := 0
 
+	// bet for winner
+	betWinner := bets[winner_index]
+
 	// bet amount for the winner
-	// amount := bets[winner_index].Amount.AmountOf("token")
-	amount := bets[0].Amount.AmountOf("token")
+	amount := betWinner.Amount.AmountOf("token")
 
 	for i, bet := range bets {
 		// skip the winner index
@@ -254,10 +256,6 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		if amount.LT(bet.Amount.AmountOf("token")) {
 			nSmallCount++
 		}
-	}
-
-	if winner_index > 0 {
-		return false, nil
 	}
 
 	// varialbles for max, min
@@ -281,11 +279,8 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		}
 
 		// accumulates the bet amount of the whole pending lotteries
-		wholeLotteryPoolAmount.Add(l.AccumulatedAmount...)
+		wholeLotteryPoolAmount = wholeLotteryPoolAmount.Add(l.AccumulatedAmount...)
 	}
-
-	// bet for winner
-	betWinner := bets[winner_index]
 
 	// if he is winner & highest bet
 	if isMax {
@@ -303,16 +298,23 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	if isMax {
 		for _, lot := range allLotteries {
 			// if it is closed lottery, skip
-			if lot.Status == 0 {
+			if lot.Status == 0 || lot.Status == 2 {
 				continue
 			}
 
 			// Update lottery status as closed
 			lotID, _ := strconv.ParseUint(lot.Index, 10, 64)
-			lot.Status = 0
+			lot.Status = 2 // closed without choosing winner
 			k.SetLottery(ctx, lotID, lot)
 		}
 	}
+
+	// Update the current lottery status
+	lottery.WinnerAddress = betWinner.Player
+	lottery.WinnerName = betWinner.Name
+	lottery.WinningNumber = winner_index + 1
+	lottery.Status = 0 // closed by selecting winner
+	k.SetLottery(ctx, lotteryID, lottery)
 
 	return true, nil
 }
