@@ -18,12 +18,7 @@ export interface LotteryBetData {
 
   /** @format byte */
   player?: string;
-
-  /**
-   * @format sdk.Coins
-   * @example [{"denom":"token","amount":"100000000"}]
-   */
-  amount?: V1Beta1Coin[];
+  amount?: string;
 }
 
 export interface LotteryLottery {
@@ -352,7 +347,7 @@ export class HttpClient<SecurityDataType = unknown> {
 }
 
 /**
- * @title lottery/bet.proto
+ * @title lottery/bet_data.proto
  * @version version not set
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {

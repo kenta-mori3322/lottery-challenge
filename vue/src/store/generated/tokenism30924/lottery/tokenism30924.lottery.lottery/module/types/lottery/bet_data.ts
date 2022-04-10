@@ -1,7 +1,6 @@
 /* eslint-disable */
 import * as Long from "long";
 import { util, configure, Writer, Reader } from "protobufjs/minimal";
-import { Coin } from "../cosmos_proto/coin";
 
 export const protobufPackage = "tokenism30924.lottery.lottery";
 
@@ -10,10 +9,10 @@ export interface BetData {
   lotteryId: number;
   name: string;
   player: Uint8Array;
-  amount: Coin[];
+  amount: string;
 }
 
-const baseBetData: object = { index: "", lotteryId: 0, name: "" };
+const baseBetData: object = { index: "", lotteryId: 0, name: "", amount: "" };
 
 export const BetData = {
   encode(message: BetData, writer: Writer = Writer.create()): Writer {
@@ -29,8 +28,8 @@ export const BetData = {
     if (message.player.length !== 0) {
       writer.uint32(34).bytes(message.player);
     }
-    for (const v of message.amount) {
-      Coin.encode(v!, writer.uint32(42).fork()).ldelim();
+    if (message.amount !== "") {
+      writer.uint32(42).string(message.amount);
     }
     return writer;
   },
@@ -39,7 +38,6 @@ export const BetData = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBetData } as BetData;
-    message.amount = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -56,7 +54,7 @@ export const BetData = {
           message.player = reader.bytes();
           break;
         case 5:
-          message.amount.push(Coin.decode(reader, reader.uint32()));
+          message.amount = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -68,7 +66,6 @@ export const BetData = {
 
   fromJSON(object: any): BetData {
     const message = { ...baseBetData } as BetData;
-    message.amount = [];
     if (object.index !== undefined && object.index !== null) {
       message.index = String(object.index);
     } else {
@@ -88,9 +85,9 @@ export const BetData = {
       message.player = bytesFromBase64(object.player);
     }
     if (object.amount !== undefined && object.amount !== null) {
-      for (const e of object.amount) {
-        message.amount.push(Coin.fromJSON(e));
-      }
+      message.amount = String(object.amount);
+    } else {
+      message.amount = "";
     }
     return message;
   },
@@ -104,17 +101,12 @@ export const BetData = {
       (obj.player = base64FromBytes(
         message.player !== undefined ? message.player : new Uint8Array()
       ));
-    if (message.amount) {
-      obj.amount = message.amount.map((e) => (e ? Coin.toJSON(e) : undefined));
-    } else {
-      obj.amount = [];
-    }
+    message.amount !== undefined && (obj.amount = message.amount);
     return obj;
   },
 
   fromPartial(object: DeepPartial<BetData>): BetData {
     const message = { ...baseBetData } as BetData;
-    message.amount = [];
     if (object.index !== undefined && object.index !== null) {
       message.index = object.index;
     } else {
@@ -136,9 +128,9 @@ export const BetData = {
       message.player = new Uint8Array();
     }
     if (object.amount !== undefined && object.amount !== null) {
-      for (const e of object.amount) {
-        message.amount.push(Coin.fromPartial(e));
-      }
+      message.amount = object.amount;
+    } else {
+      message.amount = "";
     }
     return message;
   },

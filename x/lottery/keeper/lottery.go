@@ -32,7 +32,7 @@ func (k Keeper) GetAllLottery(ctx sdk.Context) (list []types.Lottery) {
 	return list
 }
 
-func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAddress, amount sdk.Coins) (uint64, error) {
+func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAddress, amount string) (uint64, error) {
 	// Get current lottery id
 	lotteryID := k.GetLotteryCount(ctx)
 
@@ -88,9 +88,16 @@ func (k Keeper) AddBet(ctx sdk.Context, playerName string, playerAddr sdk.AccAdd
 		Amount:    amount,
 	}
 
+	// Convert price and bid strings to sdk.Coins
+	betAmount, err := sdk.ParseCoinsNormalized(amount)
+	if err != nil {
+		return 0, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coins (%s)", err)
+	}
+
 	// Accumulate the bet amount to the current lottery
-	lottery.AccumulatedAmount = lottery.AccumulatedAmount.Add(amount...)
+	lottery.AccumulatedAmount = lottery.AccumulatedAmount.Add(betAmount...)
 	lottery.BetCount++
+
 	// Update the store of lottery
 	k.SetLottery(ctx, lotteryID, lottery)
 
@@ -239,7 +246,13 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 	betWinner := bets[winner_index]
 
 	// bet amount for the winner
-	amount := betWinner.Amount.AmountOf("token")
+	// Convert price and bid strings to sdk.Coins
+	betAmount, err := sdk.ParseCoinsNormalized(betWinner.Amount)
+	if err != nil {
+		return false, sdkerrors.Wrapf(sdkerrors.ErrInvalidCoins, "invalid coins (%s)", err)
+	}
+
+	amount := betAmount.AmountOf("token")
 
 	for i, bet := range bets {
 		// skip the winner index
@@ -247,13 +260,18 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 			continue
 		}
 
+		betAmt, err := sdk.ParseCoinsNormalized(bet.Amount)
+		if err != nil {
+			continue
+		}
+
 		// if the winner bet amount is greater than
-		if amount.GT(bet.Amount.AmountOf("token")) {
+		if amount.GT(betAmt.AmountOf("token")) {
 			nBigCount++
 		}
 
 		// if the winner bet amount is lower than
-		if amount.LT(bet.Amount.AmountOf("token")) {
+		if amount.LT(betAmt.AmountOf("token")) {
 			nSmallCount++
 		}
 	}
@@ -288,7 +306,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, betWinner.Player, wholeLotteryPoolAmount)
 	} else if isMin {
 		// no reward but just the amount he has bet
-		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, betWinner.Player, betWinner.Amount)
+		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, betWinner.Player, betAmount)
 	} else {
 		// send amount of current lottery block
 		k.bankKeeper.SendCoinsFromModuleToAccount(ctx, types.ModuleName, betWinner.Player, lottery.AccumulatedAmount)

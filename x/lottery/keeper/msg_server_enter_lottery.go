@@ -50,7 +50,7 @@ func (k msgServer) EnterLottery(goCtx context.Context, msg *types.MsgEnterLotter
 	}
 
 	// Now put this bet on blockchain at certain lottery
-	_, err = k.Keeper.AddBet(ctx, msg.Creator, player, betAmount)
+	_, err = k.Keeper.AddBet(ctx, msg.Creator, player, msg.BetAmount)
 
 	if err == nil {
 		// send tokens from the buyer's account to the module's account (as a payment for the name)

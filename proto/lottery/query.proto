@@ -7,7 +7,6 @@ import "cosmos/base/query/v1beta1/pagination.proto";
 import "lottery/params.proto";
 import "lottery/lottery.proto";
 
-import "lottery/bet.proto";
 import "lottery/bet_data.proto";
 // this line is used by starport scaffolding # 1
 

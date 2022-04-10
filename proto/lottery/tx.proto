@@ -1,7 +1,6 @@
 syntax = "proto3";
 package tokenism30924.lottery.lottery;
 
-import "lottery/bet.proto";
 // this line is used by starport scaffolding # proto/tx/import
 
 option go_package = "github.com/tokenism30924/lottery/x/lottery/types";

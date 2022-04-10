@@ -23913,27 +23913,7 @@ paths:
                       type: string
                       format: byte
                     amount:
-                      type: array
-                      format: sdk.Coins
-                      example:
-                        - denom: token
-                          amount: '100000000'
-                      items:
-                        type: object
-                        properties:
-                          denom:
-                            type: string
-                          amount:
-                            type: string
-                        description: >-
-                          Coin defines a token with a denomination and an
-                          amount.
-
-
-                          NOTE: The amount field is an Int which implements the
-                          custom method
-
-                          signatures required by gogoproto.
+                      type: string
         default:
           description: An unexpected error response.
           schema:
@@ -24035,26 +24015,7 @@ paths:
                     type: string
                     format: byte
                   amount:
-                    type: array
-                    format: sdk.Coins
-                    example:
-                      - denom: token
-                        amount: '100000000'
-                    items:
-                      type: object
-                      properties:
-                        denom:
-                          type: string
-                        amount:
-                          type: string
-                      description: >-
-                        Coin defines a token with a denomination and an amount.
-
-
-                        NOTE: The amount field is an Int which implements the
-                        custom method
-
-                        signatures required by gogoproto.
+                    type: string
         default:
           description: An unexpected error response.
           schema:
@@ -41862,23 +41823,7 @@ definitions:
         type: string
         format: byte
       amount:
-        type: array
-        format: sdk.Coins
-        example:
-          - denom: token
-            amount: '100000000'
-        items:
-          type: object
-          properties:
-            denom:
-              type: string
-            amount:
-              type: string
-          description: |-
-            Coin defines a token with a denomination and an amount.
-
-            NOTE: The amount field is an Int which implements the custom method
-            signatures required by gogoproto.
+        type: string
   tokenism30924.lottery.lottery.Lottery:
     type: object
     properties:
@@ -41966,26 +41911,7 @@ definitions:
               type: string
               format: byte
             amount:
-              type: array
-              format: sdk.Coins
-              example:
-                - denom: token
-                  amount: '100000000'
-              items:
-                type: object
-                properties:
-                  denom:
-                    type: string
-                  amount:
-                    type: string
-                description: >-
-                  Coin defines a token with a denomination and an amount.
-
-
-                  NOTE: The amount field is an Int which implements the custom
-                  method
-
-                  signatures required by gogoproto.
+              type: string
   tokenism30924.lottery.lottery.QueryAllLotteryResponse:
     type: object
     properties:
@@ -42072,26 +41998,7 @@ definitions:
             type: string
             format: byte
           amount:
-            type: array
-            format: sdk.Coins
-            example:
-              - denom: token
-                amount: '100000000'
-            items:
-              type: object
-              properties:
-                denom:
-                  type: string
-                amount:
-                  type: string
-              description: >-
-                Coin defines a token with a denomination and an amount.
-
-
-                NOTE: The amount field is an Int which implements the custom
-                method
-
-                signatures required by gogoproto.
+            type: string
   tokenism30924.lottery.lottery.QueryGetLotteryResponse:
     type: object
     properties:
