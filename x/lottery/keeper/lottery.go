@@ -344,7 +344,7 @@ func (k Keeper) CloseLottery(ctx sdk.Context) bool {
 		// if there is not enough bets in the current lottery, then skip over it
 		if lot.BetCount < 4 {
 			fmt.Println("There should be at least 4 enter lottery transactions per lottery")
-			return false
+			continue
 		}
 
 		// determin the winner in the current lottery
