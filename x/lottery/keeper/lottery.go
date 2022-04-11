@@ -3,11 +3,10 @@ package keeper
 import (
 	"bytes"
 	"crypto/sha256"
+	"encoding/binary"
 	"fmt"
 	"strconv"
 	"time"
-
-	"unsafe"
 
 	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -182,32 +181,20 @@ func (k Keeper) GetBetsIterator(ctx sdk.Context) sdk.Iterator {
 	return betStore.Iterator(nil, nil)
 }
 
-// Convert byte array to uint64
-func ByteArrayToInt(arr []byte) uint64 {
-	val := uint64(0)
-	size := len(arr)
-	for i := 0; i < size; i++ {
-		*(*uint8)(unsafe.Pointer(uintptr(unsafe.Pointer(&val)) + uintptr(i))) = arr[i]
-	}
-	return val
-}
-
-func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error) {
-	// Get current lottery block
-	lottery, _, err := k.GetLottery(ctx, lotteryID)
-	if err != nil {
-		fmt.Println("error closing lottery")
-		return false, err
-	}
+// Determines the winner of a lottery
+func (k Keeper) DetermineWinner(ctx sdk.Context, lottery types.Lottery) (bool, error) {
+	lotteryID, _ := strconv.ParseUint(lottery.Index, 10, 64)
 
 	// Bet array for current lottery block
-	bets := make([]types.BetData, 0)
+	bets := make([]types.BetData, 10)
 
 	// Gets iterator for bets
 	iterator := k.GetBetsIterator(ctx)
 
 	// number of the bets in the current lottery
 	numberOfBets := 0
+
+	defer iterator.Close()
 
 	// Iterate bets
 	for ; iterator.Valid(); iterator.Next() {
@@ -220,8 +207,13 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		}
 
 		// Get the bets in the current lottery
-		bets = append(bets, bet)
+		// bets = append(bets, bet)
+		bets[numberOfBets] = bet
+		numberOfBets++
 	}
+
+	// Log number of bets
+	fmt.Println("numberOfBets", numberOfBets)
 
 	// Generates the hash for tendermint transactions
 	transactionHash := sha256.Sum256(ctx.TxBytes())
@@ -232,11 +224,11 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 		b[i] = transactionHash[i+16]
 	}
 
-	// Get the count of bets
-	numberOfBets = len(bets)
-
 	// winner_index = (hash_result ^ 0xFFFF) % number_of_transactions_in_block
-	winner_index := ByteArrayToInt(b) % uint64(numberOfBets)
+	winner_index := binary.BigEndian.Uint64(b) % uint64(numberOfBets)
+
+	// Log winner index
+	fmt.Println("Winner_index", winner_index)
 
 	// Check if the winner is highest or lowest bet
 	nBigCount := 0
@@ -254,6 +246,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 
 	amount := betAmount.AmountOf("token")
 
+	// Loop and check if he is the highest or lowest bet
 	for i, bet := range bets {
 		// skip the winner index
 		if i == int(winner_index) {
@@ -339,21 +332,24 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lotteryID uint64) (bool, error)
 
 //close lottery
 func (k Keeper) CloseLottery(ctx sdk.Context) bool {
-	lotteryId := k.GetLotteryCount(ctx)
-	lottery, _, err := k.GetLottery(ctx, lotteryId)
-	if err != nil {
-		fmt.Println("no such lottery")
-		return false
-	}
+	lotteries := k.GetAllLottery(ctx)
 
-	// if there is not enough bets in the current lottery, then skip over it
-	if lottery.BetCount < 4 {
-		fmt.Println("There should be at least 4 enter lottery transactions per lottery")
-		return false
-	}
+	succeed := false
+	for _, lot := range lotteries {
+		// if he is not opened lottery, skip
+		if lot.Status != 1 {
+			continue
+		}
 
-	// determin the winner in the current lottery
-	succeed, _ := k.DetermineWinner(ctx, lotteryId)
+		// if there is not enough bets in the current lottery, then skip over it
+		if lot.BetCount < 4 {
+			fmt.Println("There should be at least 4 enter lottery transactions per lottery")
+			return false
+		}
+
+		// determin the winner in the current lottery
+		succeed, _ = k.DetermineWinner(ctx, lot)
+	}
 
 	// if it is not successful
 	if !succeed {
