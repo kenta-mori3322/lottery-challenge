@@ -216,6 +216,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lottery types.Lottery) (bool, e
 	fmt.Println("numberOfBets", numberOfBets)
 
 	// Generates the hash for tendermint transactions
+
 	transactionHash := sha256.Sum256(ctx.TxBytes())
 	b := make([]byte, 16)
 
@@ -335,7 +336,7 @@ func (k Keeper) CloseLottery(ctx sdk.Context) bool {
 	lotteries := k.GetAllLottery(ctx)
 
 	succeed := false
-	for _, lot := range lotteries {
+	for i, lot := range lotteries {
 		// if he is not opened lottery, skip
 		if lot.Status != 1 {
 			continue
@@ -343,21 +344,19 @@ func (k Keeper) CloseLottery(ctx sdk.Context) bool {
 
 		// if there is not enough bets in the current lottery, then skip over it
 		if lot.BetCount < 4 {
-			fmt.Println("There should be at least 4 enter lottery transactions per lottery")
 			continue
 		}
 
 		// determin the winner in the current lottery
 		succeed, _ = k.DetermineWinner(ctx, lot)
-	}
 
-	// if it is not successful
-	if !succeed {
-		fmt.Println("error while determining the winner")
+		// if it is not successful
+		if !succeed {
+			fmt.Println("Internal error while determining the winner")
+		} else {
+			fmt.Println("Successfully closed", i, "lottery block")
+		}
 	}
-
-	// Logs
-	fmt.Println("Successfully closed lottery block")
 
 	return succeed
 }
