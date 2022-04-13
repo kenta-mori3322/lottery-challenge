@@ -195,7 +195,7 @@ func (k Keeper) binaryArrayOr(ctx sdk.Context, arr1 []byte, arr2 [32]byte) bool 
 }
 
 // Binary Sum of 2 same length byte arrays
-func (k Keeper) binaryArrryAnd(ctx sdk.Context, arr1 []byte, arr2 [32]byte) bool {
+func (k Keeper) binaryArrayAnd(ctx sdk.Context, arr1 []byte, arr2 [32]byte) bool {
 	if len(arr1) != len(arr2) {
 		return false
 	}
@@ -267,7 +267,7 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lottery types.Lottery) (bool, e
 	}
 
 	// hash &= time_hash
-	result := k.binaryArrryAnd(ctx, transactionHash, sha256.Sum256(tb))
+	result := k.binaryArrayAnd(ctx, transactionHash, sha256.Sum256(tb))
 	if !result {
 		return false, nil
 	}
