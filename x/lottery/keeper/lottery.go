@@ -181,6 +181,32 @@ func (k Keeper) GetBetsIterator(ctx sdk.Context) sdk.Iterator {
 	return betStore.Iterator(nil, nil)
 }
 
+// Binary Sum of 2 same length byte arrays
+func (k Keeper) binaryArrayOr(ctx sdk.Context, arr1 []byte, arr2 [32]byte) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+
+	for i := 0; i < len(arr1); i++ {
+		arr1[i] |= arr2[i]
+	}
+
+	return true
+}
+
+// Binary Sum of 2 same length byte arrays
+func (k Keeper) binaryArrryAnd(ctx sdk.Context, arr1 []byte, arr2 [32]byte) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+
+	for i := 0; i < len(arr1); i++ {
+		arr1[i] &= arr2[i]
+	}
+
+	return true
+}
+
 // Determines the winner of a lottery
 func (k Keeper) DetermineWinner(ctx sdk.Context, lottery types.Lottery) (bool, error) {
 	lotteryID, _ := strconv.ParseUint(lottery.Index, 10, 64)
@@ -217,7 +243,36 @@ func (k Keeper) DetermineWinner(ctx sdk.Context, lottery types.Lottery) (bool, e
 
 	// Generates the hash for tendermint transactions
 
-	transactionHash := sha256.Sum256(ctx.TxBytes())
+	transactionHash := make([]byte, 32)
+
+	// Sequentially hashing bets
+	for i := 0; i < numberOfBets; i++ {
+		// Get binary a bet
+		bb, e := bets[i].Marshal()
+		if e != nil {
+			return false, nil
+		}
+
+		// hash |= bet_hash
+		result := k.binaryArrayOr(ctx, transactionHash, sha256.Sum256(bb))
+		if !result {
+			return false, nil
+		}
+	}
+
+	// Get binary for current time
+	tb, e := ctx.BlockTime().MarshalBinary()
+	if e != nil {
+		return false, nil
+	}
+
+	// hash &= time_hash
+	result := k.binaryArrryAnd(ctx, transactionHash, sha256.Sum256(tb))
+	if !result {
+		return false, nil
+	}
+
+	// Lower 16 bit
 	b := make([]byte, 16)
 
 	// transactionHash ^ 0xFFFF
@@ -354,7 +409,7 @@ func (k Keeper) CloseLottery(ctx sdk.Context) bool {
 		if !succeed {
 			fmt.Println("Internal error while determining the winner")
 		} else {
-			fmt.Println("Successfully closed", i, "lottery block")
+			fmt.Println("Successfully closed", i+1, "lottery block")
 		}
 	}
 
