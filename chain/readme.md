@@ -81,39 +81,74 @@ lotteryd init --chain-id test validator
 
 echo "pet apart myth reflect stuff force attract taste caught fit exact ice slide sheriff state since unusual gaze practice course mesh magnet ozone purchase" | lotteryd keys add validator --keyring-backend test --recover
 
-echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | lotteryd keys add test1 --keyring-backend test --recover
+echo "bottom soccer blue sniff use improve rough use amateur senior transfer quarter" | lotteryd keys add client1 --keyring-backend test --recover
 
-echo "wreck layer draw very fame person frown essence approve lyrics sustain spoon" | lotteryd keys add test2 --keyring-backend test --recover
+echo "wreck layer draw very fame person frown essence approve lyrics sustain spoon" | lotteryd keys add client2 --keyring-backend test --recover
 
-echo "exotic merit wrestle sad bundle age purity ability collect immense place tone" | lotteryd keys add test3 --keyring-backend test --recover
+echo "exotic merit wrestle sad bundle age purity ability collect immense place tone" | lotteryd keys add client3 --keyring-backend test --recover
 
-echo "faculty head please solid picnic benefit hurt gloom flag transfer thrive zebra" | lotteryd keys add test4 --keyring-backend test --recover
+echo "faculty head please solid picnic benefit hurt gloom flag transfer thrive zebra" | lotteryd keys add client4 --keyring-backend test --recover
+
+echo "relax swallow movie myself ill injury demand scrub rapid broken name spread mad entire spin then roast law winner box luxury sister suggest picture" | lotteryd keys add client5 --keyring-backend test --recover
+
+echo "kiss cup monster core family describe debris flame adult demand plug machine shock young abandon jewel matter page museum grunt stereo return august dinosaur" | lotteryd keys add client6 --keyring-backend test --recover
+
+echo "satisfy current crowd mixed usage state wool oppose rebel wolf double element fence course route flavor fortune merry this group forget that brave chuckle" | lotteryd keys add client7 --keyring-backend test --recover
+
+echo "soul shine either hurry fabric case tuna topple review excess quiz blush gift ridge oil discover exercise control warm antique neglect casual choice giggle" | lotteryd keys add client8 --keyring-backend test --recover
+
+echo "crew cruise anger turkey proud penalty unknown polar weird excess domain believe horse subject peasant economy share captain tissue window egg umbrella diet total" | lotteryd keys add client9 --keyring-backend test --recover
+
+echo "nerve sunset spoil very tumble liberty pipe need country engage shrug maze mail differ box win mean slogan end obtain foil open rent book" | lotteryd keys add client10 --keyring-backend test --recover
+
+echo "milk detect problem forward moral grass oxygen fever aim invite awful write crazy baby want access soda dial census chaos whisper club dirt scatter" | lotteryd keys add client11 --keyring-backend test --recover
+
+echo "off bamboo remember wink zero crazy senior black soccer good swarm enough hidden step hazard nation gasp priority scene supply into bean prepare casual" | lotteryd keys add client12 --keyring-backend test --recover
+
+echo "liar course come fame tilt cattle text pond torch eager subject daughter seminar popular odor frost scatter push shallow liberty armor merit move burger" | lotteryd keys add client13 --keyring-backend test --recover
+
+echo "inner deposit gain cushion smooth warm muffin simple earth stamp chair zero chronic decide magic hip car submit install lonely embody earn olympic fat" | lotteryd keys add client14 --keyring-backend test --recover
+
+echo "indoor knee spider action shed east diet rose subject bomb avoid local magnet symbol note medal bean shuffle caught climb goose fox ensure switch" | lotteryd keys add client15 --keyring-backend test --recover
+
+echo "gloom plug zero artist swear inform uniform cream faculty cover input eight wire brass copper stick hybrid erosion country more neutral lonely mention history" | lotteryd keys add client16 --keyring-backend test --recover
+
+echo "business twist situate identify wing cool kick liar sort struggle token yard car cake mention hole strong success slice mean knee gift milk flat" | lotteryd keys add client17 --keyring-backend test --recover
+
+echo "table erupt income essay simple harbor subway priority exhibit ceiling vendor maple card become permit journey visual blind trophy spread vault empower fat advice" | lotteryd keys add client18 --keyring-backend test --recover
+
+echo "debris apart size shy era wrestle jazz aware fatigue sight suggest normal public glory age ticket episode sister august portion unveil entry transfer cupboard" | lotteryd keys add client19 --keyring-backend test --recover
+
+echo "palm drastic present entry citizen noise plug outside toss eager retreat roof tilt own good girl embody first body purpose ivory loop guitar hurt" | lotteryd keys add client20 --keyring-backend test --recover
 
 **Add genesis accounts**
-lotteryd add-genesis-account $(lotteryd keys show validator -a --keyring-backend test) 100000000000000token,300000000000000stake
-lotteryd add-genesis-account $(lotteryd keys show test1 -a --keyring-backend test) 110000000000000token,300000000000000stake
-lotteryd add-genesis-account $(lotteryd keys show test2 -a --keyring-backend test) 120000000000000token,300000000000000stake
-lotteryd add-genesis-account $(lotteryd keys show test3 -a --keyring-backend test) 130000000000000token,300000000000000stake
-lotteryd add-genesis-account $(lotteryd keys show test4 -a --keyring-backend test) 140000000000000token,300000000000000stake
+lotteryd add-genesis-account $(lotteryd keys show validator -a --keyring-backend test) 1000token,30000000000000stake
+lotteryd add-genesis-account $(lotteryd keys show client1 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client2 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client3 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client4 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client5 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client6 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client7 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client8 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client9 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client10 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client11 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client12 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client13 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client14 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client15 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client16 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client17 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client18 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client19 -a --keyring-backend test) 500token,30000stake
+lotteryd add-genesis-account $(lotteryd keys show client20 -a --keyring-backend test) 500token,30000stake
 
 **Add a genesis validator by staking "stake" tokens**
 lotteryd gentx validator 9000000000000stake --keyring-backend test --chain-id test
 
 **Collect genesis transactions**
 lotteryd collect-gentxs
-
-```
-
-## How to config tendermint configuration
-```
-sudo vi ~/.LotteryApp/config/config.toml
-
-**RPC server configuration option**
-timeout_broadcast_tx_commit="300s"
-
-**Consensus configuration option**
-timeout_commit="300s"
-create_empty_block_interval="300s"
 
 ```
 
@@ -161,5 +196,7 @@ lotteryd tx lottery enter-lottery 100token --from validator1 --chain-id test -y
 ```
 lotteryd q lottery list-lottery
 ```
-## Obstacles
-Currently, the above tendermint configuration doens't allow blockchain to generate any block. I should make them less than 5s in oder to generate blocks. But in the assignment, it is mentioned to generate lottery block every 5 mins. Among those that have more than 4 enter-lottery transactions are considered as valid lottery block.
+## How to query bets
+```
+lotteryd q lottery list-bet-data
+```
