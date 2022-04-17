@@ -29,7 +29,7 @@ func getBalance(s string) (uint64, bool) {
 }
 
 func main() {
-	nMaxLoop := 2     //100
+	nMaxLoop := 100   //100
 	nCntClients := 20 // 20
 	nCurrentLoop := 0
 	app := "lotteryd"
