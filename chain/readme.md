@@ -200,3 +200,8 @@ lotteryd q lottery list-lottery
 ```
 lotteryd q lottery list-bet-data
 ```
+## How to query balance
+```
+lotteryd q bank balances <account_addr>
+ex; lotteryd q bank balances lottery14u53eghrurpeyx5cm47vm3qwugtmhcpn2hf7yj
+```
